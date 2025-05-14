@@ -6,17 +6,17 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import warnings
-# ½«¾¯¸æ¼¶±ðÉèÖÃÎª ERROR£¬ÒâÎ¶×ÅÖ»»áÏÔÊ¾ ERROR ¼¶±ðµÄ¾¯¸æ
+# å°†è­¦å‘Šçº§åˆ«è®¾ç½®ä¸º ERRORï¼Œæ„å‘³ç€åªä¼šæ˜¾ç¤º ERROR çº§åˆ«çš„è­¦å‘Š
 class InfoSpreading(object):
     def __init__(self):
         self.nodesNum = 0
         self.beta = 0
         self.gamma = 0
-        self.timeStep = 50 # Ê±¼ä²½
-        self.repeatNum = 100  # ÖØ¸´ÊµÑé´ÎÊý(Ä¬ÈÏ100)
+        self.timeStep = 50 # æ—¶é—´æ­¥
+        self.repeatNum = 100  # é‡å¤å®žéªŒæ¬¡æ•°(é»˜è®¤100)
         self.betaNum = 21
-        self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
-        self.imageData = np.zeros((self.timeStep, 20), float)  # ´æ·ÅÃ¿¸öÊ±¼ä²½µÄ¦ÑµÈÏà¹ØÊý¾Ý
+        self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
+        self.imageData = np.zeros((self.timeStep, 20), float)  # å­˜æ”¾æ¯ä¸ªæ—¶é—´æ­¥çš„Ïç­‰ç›¸å…³æ•°æ®
         self.stateData = []
         self.scenes = {}
         self.node_to_edge = {}
@@ -24,21 +24,21 @@ class InfoSpreading(object):
         self.importPath = "ModelSave/"
         self.dataSave ="../Save/DataSave/ResultData/"
 
-    # ÎÈÌ¬ÏÂ¦ÑµÄ·ÂÕæ
+    # ç¨³æ€ä¸‹Ïçš„ä»¿çœŸ
     def funRun1(self):
-        # µ¼ÈëÄ£ÐÍ
+        # å¯¼å…¥æ¨¡åž‹
         self.importModel(1000,3,3,3,2)
         for beta in range(self.betaNum):
-            print("\r¦Â="+str(beta/100),end="")
+            print("\rÎ²="+str(beta/100),end="")
             self.sprSteadyState(beta/100, 0.3, 0, "avgHi")
         print(self.stateData)
-        #self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw()  # »æÍ¼
+        #self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw()  # ç»˜å›¾
 
-    # ²»Í¬½ÚµãÊý
+    # ä¸åŒèŠ‚ç‚¹æ•°
     def funRun2(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         self.importModel(1000,3,3,3,2)
         self.spr(0.1,0.1,0, "avgHi")
         self.importModel(3000,3,3,3,2)
@@ -46,13 +46,13 @@ class InfoSpreading(object):
         self.importModel(5000,3,3,3,2)
         self.spr(0.1,0.1,2, "avgHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw2()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw2()  # ç»˜å›¾
 
-    # ²»Í¬´«²¥ÂÊ¦Â
+    # ä¸åŒä¼ æ’­çŽ‡Î²
     def funRun3(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         self.importModel(1000,3,3,3,2)
         self.spr_cp(0.05,0.1, 0, "avgHi")
         self.importModel(1000,3,3,3,2)
@@ -60,13 +60,13 @@ class InfoSpreading(object):
         self.importModel(1000,3,3,3,2)
         self.spr_cp_raw(0.2, 0.1, 2, "avgHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw3()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw3()  # ç»˜å›¾
 
-    # ²»Í¬»Ö¸´ÂÊ¦Ã
+    # ä¸åŒæ¢å¤çŽ‡Î³
     def funRun4(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         self.importModel(1000,3,3,3,2)
         self.spr_cp(0.1, 0.05, 0, "avgHi")
         self.importModel(1000,3,3,3,2)
@@ -74,13 +74,13 @@ class InfoSpreading(object):
         self.importModel(1000,3,3,3,2)
         self.spr_cp(0.1, 0.20, 2, "avgHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw4()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw4()  # ç»˜å›¾
 
-    # ²»Í¬ÁÚ¾Ó½×Êýn
+    # ä¸åŒé‚»å±…é˜¶æ•°n
     def funRun5(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         # self.importModel_raw(1000,3,3,3)
         # self.spr(0.1, 0.1, 0, "avgHi")
         self.importModel(1000,3,3,3,2)
@@ -90,13 +90,13 @@ class InfoSpreading(object):
         self.importModel(1000,3,3,3,4)
         self.spr(0.1, 0.1, 2, "avgHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw5()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw5()  # ç»˜å›¾
 
-    # ²»Í¬³õÊ¼´«²¥½Úµã
+    # ä¸åŒåˆå§‹ä¼ æ’­èŠ‚ç‚¹
     def funRun6(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         self.importModel(1000, 3,3,3,2)
         self.spr(0.1, 0.1, 0, "minHi")
         self.importModel(1000, 3,3,3,2)
@@ -104,25 +104,25 @@ class InfoSpreading(object):
         self.importModel(1000, 3,3,3,2)
         self.spr(0.1, 0.1, 2, "maxHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw6()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw6()  # ç»˜å›¾
 
-    # ÓëBA³¬ÍøÂç¶Ô±È
+    # ä¸ŽBAè¶…ç½‘ç»œå¯¹æ¯”
     def funRun7(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         self.importModel_raw(1000,3,3,3)
         self.spr(0.1, 0.1, 0, "avgHi")
         self.importModel_raw(1000,3,3,3)
         self.spr(0.1, 0.1, 1, "avgHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw7()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw7()  # ç»˜å›¾
 
-    # ²»Í¬m1
+    # ä¸åŒm1
     def funRun8(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         self.importModel(1000,1,3,3,2)
         self.spr_cp(0.1, 0.1, 0, "avgHi")
         self.importModel(1000,3,3,3,2)
@@ -130,7 +130,7 @@ class InfoSpreading(object):
         self.importModel(1000,5,3,3,2)
         self.spr_cp(0.1, 0.1, 2, "avgHi")
 
-        # ÏÂ·½´úÂëÀíÂÛÓëÊµ¼ÊÇúÏß»æÍ¼Ê±Ê¹ÓÃ£¬ÐÞ¸Äbeta
+        # ä¸‹æ–¹ä»£ç ç†è®ºä¸Žå®žé™…æ›²çº¿ç»˜å›¾æ—¶ä½¿ç”¨ï¼Œä¿®æ”¹beta
         # self.importModel(1000, 1, 3, 3)
         # self.spr(0.2, 0.1, 0, "avgHi")
         # self.importModel(1000, 3, 3, 3)
@@ -138,13 +138,13 @@ class InfoSpreading(object):
         # self.importModel(1000, 5, 3, 3)
         # self.spr(0.2, 0.1, 2, "avgHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw8()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw8()  # ç»˜å›¾
 
-    # ²»Í¬m2
+    # ä¸åŒm2
     def funRun9(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         self.importModel(1000, 3, 1, 3, 2)
         self.spr_cp(0.1, 0.1, 0, "avgHi")
         self.importModel(1000, 3, 3, 3, 2)
@@ -152,13 +152,13 @@ class InfoSpreading(object):
         self.importModel(1000, 3, 5, 3, 2)
         self.spr_cp(0.1, 0.1, 2, "avgHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw9()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw9()  # ç»˜å›¾
 
-    # ²»Í¬m
+    # ä¸åŒm
     def funRun10(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         self.importModel(1000, 3, 3, 1, 2)
         self.spr_cp(0.1, 0.1, 0, "avgHi")
         self.importModel(1000, 3, 3, 3, 2)
@@ -166,13 +166,13 @@ class InfoSpreading(object):
         self.importModel(1000, 3, 3, 5, 2)
         self.spr_cp(0.1, 0.1, 2, "avgHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw10()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw10()  # ç»˜å›¾
 
-    # m1+m2µÄÓ°Ïì
+    # m1+m2çš„å½±å“
     def funRun11(self):
-        # µ¼ÈëÄ£ÐÍ
-        # ³¬±ß±äÁ¿Ôö³¤
+        # å¯¼å…¥æ¨¡åž‹
+        # è¶…è¾¹å˜é‡å¢žé•¿
         # self.importModel(1000, 1, 1, 3, 2)
         # self.spr_cp(0.1, 0.1, 0, "avgHi")
         # self.importModel(1000, 3, 3, 3, 2)
@@ -187,10 +187,10 @@ class InfoSpreading(object):
         self.importModel(1000, 5, 1, 3, 2)
         self.spr_cp(0.1, 0.1, 2, "avgHi")
 
-        # self.dataExport()  # Êý¾Ý´æ´¢
-        self.imgDraw11()  # »æÍ¼
+        # self.dataExport()  # æ•°æ®å­˜å‚¨
+        self.imgDraw11()  # ç»˜å›¾
 
-    # ²»Í¬p,m2±ä»¯µÄÓ°Ïì
+    # ä¸åŒp,m2å˜åŒ–çš„å½±å“
     def funRun12(self):
         self.importPath = "ModelSave/"
         self.importModel(999, 3, 1,3, 2)
@@ -202,9 +202,9 @@ class InfoSpreading(object):
         self.importModel(999, 3, 3, 3, 8)
         self.spr(0.1, 0.1, 3, "avgHi")
 
-        self.imgDraw12()  # »æÍ¼
+        self.imgDraw12()  # ç»˜å›¾
 
-    # ²»Í¬p,m1±ä»¯µÄÓ°Ïì
+    # ä¸åŒp,m1å˜åŒ–çš„å½±å“
     def funRun13(self):
         self.importPath = "ModelSave/"
         self.importModel(999, 1, 3, 3, 2)
@@ -216,23 +216,23 @@ class InfoSpreading(object):
         self.importModel(997, 3, 3, 3, 8)
         self.spr(0.1, 0.1, 3, "avgHi")
 
-        self.imgDraw13()  # »æÍ¼
+        self.imgDraw13()  # ç»˜å›¾
 
-    # µ¼ÈëÊý¾Ý
-    def importModel(self, N,m1,m2,m,n):  # ½ÚµãÊý(1000,3000,5000),³¬±ßÊý,¦ÈÖµ(Êµ¼ÊÖµµÄÊ®±¶),Ä£ÐÍ(edge,node)
+    # å¯¼å…¥æ•°æ®
+    def importModel(self, N,m1,m2,m,n):  # èŠ‚ç‚¹æ•°(1000,3000,5000),è¶…è¾¹æ•°,Î¸å€¼(å®žé™…å€¼çš„åå€),æ¨¡åž‹(edge,node)
         self.nodesNum = N
-        self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
+        self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
         self.scenes = {}
-        print("µ¼Èën" + str(N) +"m1"+str(m1)+"m2"+str(m2)+"m"+str(m)+"n"+str(n) + "Ä£ÐÍ")
-        # ³¬ÍøÂçÄ£ÐÍµ¼Èë
+        print("å¯¼å…¥n" + str(N) +"m1"+str(m1)+"m2"+str(m2)+"m"+str(m)+"n"+str(n) + "æ¨¡åž‹")
+        # è¶…ç½‘ç»œæ¨¡åž‹å¯¼å…¥
         self.incidenceMatrix = np.genfromtxt(self.importPath+"n"+str(self.nodesNum)+"m1"+str(m1)+"m2"+str(m2)+"m"+str(m)+"_"+str(n)+"version.txt",delimiter=' ')
         for i in range(len(self.incidenceMatrix[0])):
-            eTuple = ()  # ³¬±ßÖÐµÄ½ÚµãÓÃÔª×é´æ´¢
+            eTuple = ()  # è¶…è¾¹ä¸­çš„èŠ‚ç‚¹ç”¨å…ƒç»„å­˜å‚¨
             for j in range(self.nodesNum):
                 if self.incidenceMatrix[j][i] != 0:
                     eTuple += ('v' + str(j + 1),)
             self.scenes["E" + str(i + 1)] = eTuple
-        edgesNum = len(self.incidenceMatrix[0]) #³¬ÍøÂçµÄ³¬±ßÊý
+        edgesNum = len(self.incidenceMatrix[0]) #è¶…ç½‘ç»œçš„è¶…è¾¹æ•°
         for node, edge_list in enumerate(self.incidenceMatrix, start=1):
             edges = ()
             for i in range(edgesNum):
@@ -240,15 +240,15 @@ class InfoSpreading(object):
                     edges += ('E' + str(i + 1),)
             self.node_to_edge["v" + str(node)] = edges
 
-    def importModel_raw(self, N,m1,m2,m):  # ½ÚµãÊý(1000,3000,5000),³¬±ßÊý,¦ÈÖµ(Êµ¼ÊÖµµÄÊ®±¶),Ä£ÐÍ(edge,node)
+    def importModel_raw(self, N,m1,m2,m):  # èŠ‚ç‚¹æ•°(1000,3000,5000),è¶…è¾¹æ•°,Î¸å€¼(å®žé™…å€¼çš„åå€),æ¨¡åž‹(edge,node)
         self.nodesNum = N
-        self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
+        self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
         self.scenes = {}
-        print("µ¼Èën" + str(N) +"m1"+str(m1)+"m2"+str(m2)+"m"+str(m)+ "Ä£ÐÍ")
-        # ³¬ÍøÂçÄ£ÐÍµ¼Èë
+        print("å¯¼å…¥n" + str(N) +"m1"+str(m1)+"m2"+str(m2)+"m"+str(m)+ "æ¨¡åž‹")
+        # è¶…ç½‘ç»œæ¨¡åž‹å¯¼å…¥
         self.incidenceMatrix = np.genfromtxt(self.importPath+"n"+str(self.nodesNum)+"m1"+str(m1)+"m2"+str(m2)+"m"+str(m)+".txt",delimiter=' ')
         for i in range(len(self.incidenceMatrix[0])):
-            eTuple = ()  # ³¬±ßÖÐµÄ½ÚµãÓÃÔª×é´æ´¢
+            eTuple = ()  # è¶…è¾¹ä¸­çš„èŠ‚ç‚¹ç”¨å…ƒç»„å­˜å‚¨
             for j in range(self.nodesNum):
                 if self.incidenceMatrix[j][i] != 0:
                     eTuple += ('v' + str(j + 1),)
@@ -256,19 +256,19 @@ class InfoSpreading(object):
                     #     break
             self.scenes["E" + str(i + 1)] = eTuple
 
-    # µ¼ÈëÊý¾Ý
-    def importModel1(self, N, E, theta, m1,m2,m):  # ½ÚµãÊý(1000,3000,5000),³¬±ßÊý,¦ÈÖµ(Êµ¼ÊÖµµÄÊ®±¶),Ä£ÐÍ(edge,node)
+    # å¯¼å…¥æ•°æ®
+    def importModel1(self, N, E, theta, m1,m2,m):  # èŠ‚ç‚¹æ•°(1000,3000,5000),è¶…è¾¹æ•°,Î¸å€¼(å®žé™…å€¼çš„åå€),æ¨¡åž‹(edge,node)
         self.nodesNum = N
         self.theta = theta
-        self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
+        self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
         self.scenes = {}
-        print("ÕýÔÚµ¼Èën{}e{}theta{}m1{}m2{}m{}µÄÄ£ÐÍ".format(N,E,theta,m1,m2,m))
-        # ³¬ÍøÂçÄ£ÐÍµ¼Èë
+        print("æ­£åœ¨å¯¼å…¥n{}e{}theta{}m1{}m2{}m{}çš„æ¨¡åž‹".format(N,E,theta,m1,m2,m))
+        # è¶…ç½‘ç»œæ¨¡åž‹å¯¼å…¥
         self.incidenceMatrix = np.genfromtxt(
             self.importPath + "n" + str(N) + "e" + str(E) + "theta" + str(
                 theta) + "m1"+str(m1)+"m2"+str(m2)+"m"+str(m) + "EdgeInc.txt", delimiter=' ')
         for i in range(len(self.incidenceMatrix[0])):
-            eTuple = ()  # ³¬±ßÖÐµÄ½ÚµãÓÃÔª×é´æ´¢
+            eTuple = ()  # è¶…è¾¹ä¸­çš„èŠ‚ç‚¹ç”¨å…ƒç»„å­˜å‚¨
             for j in range(self.nodesNum):
                 if self.incidenceMatrix[j][i] != 0:
                     eTuple += ('v' + str(j + 1),)
@@ -276,53 +276,53 @@ class InfoSpreading(object):
                     #     break
             self.scenes["E" + str(i + 1)] = eTuple
 
-    # ÐÅÏ¢´«²¥
+    # ä¿¡æ¯ä¼ æ’­
     def spr(self, beita, gama, n, select):
-        # ÖØ¸´n´ÎÊµÑé
-        selectnode = 0  # ¼ÇÂ¼³õÊ¼´«²¥½Úµã
+        # é‡å¤næ¬¡å®žéªŒ
+        selectnode = 0  # è®°å½•åˆå§‹ä¼ æ’­èŠ‚ç‚¹
         for repeat in range(self.repeatNum):
-            print("\rÖØ¸´ÊµÑé½ø¶È£º"+str(repeat+1)+"/"+str(self.repeatNum),end="")
-            # ³õÊ¼»¯
-            self.IStateNodes = []  # ´æ·ÅI×´Ì¬½Úµã±àºÅ
-            self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
+            print("\ré‡å¤å®žéªŒè¿›åº¦ï¼š"+str(repeat+1)+"/"+str(self.repeatNum),end="")
+            # åˆå§‹åŒ–
+            self.IStateNodes = []  # å­˜æ”¾IçŠ¶æ€èŠ‚ç‚¹ç¼–å·
+            self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
             for i in range(self.nodesNum):
                 self.state[i][0] = i + 1
-                self.state[i][1] = 0  # 0±íÊ¾S×´Ì¬
+                self.state[i][1] = 0  # 0è¡¨ç¤ºSçŠ¶æ€
             if repeat == 0:
                 if select == "random":
-                    selectnode = self.randomHi()  # Ëæ»úÑ¡Ôñ½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.randomHi()  # éšæœºé€‰æ‹©èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "avgHi":
-                    selectnode = self.avgHi()  # Ñ¡ÔñÆ½¾ù³¬¶È½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.avgHi()  # é€‰æ‹©å¹³å‡è¶…åº¦èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "maxHi":
-                    selectnode = self.maxHi()  # Ñ¡Ôñ³¬¶È×î´ó½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.maxHi()  # é€‰æ‹©è¶…åº¦æœ€å¤§èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "minHi":
-                    selectnode = self.minHi()  # Ñ¡Ôñ³¬¶È×îÐ¡½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.minHi()  # é€‰æ‹©è¶…åº¦æœ€å°èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
             self.IStateNodes.append(selectnode)
-            self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
+            self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
 
-            edgesNum = len(self.incidenceMatrix[0])  # ³¬ÍøÂçµÄ³¬±ßÊý
-            # ½øÐÐt¸öÊ±¼ä²½´«²¥
+            edgesNum = len(self.incidenceMatrix[0])  # è¶…ç½‘ç»œçš„è¶…è¾¹æ•°
+            # è¿›è¡Œtä¸ªæ—¶é—´æ­¥ä¼ æ’­
             for t in range(self.timeStep):
                 recoverNodes = []
                 if t >= 1:
                     for i in self.IStateNodes:
-                        if random.randint(1, 100) <= 100 * gama:  # I»Ö¸´ÎªS
+                        if random.randint(1, 100) <= 100 * gama:  # Iæ¢å¤ä¸ºS
                             recoverNodes.append(i)
-                # É¸Ñ¡ÓÐI×´Ì¬½ÚµãµÄ³¬±ß
+                # ç­›é€‰æœ‰IçŠ¶æ€èŠ‚ç‚¹çš„è¶…è¾¹
                 for e in range(edgesNum):
                     for node in self.scenes['E' + str(e + 1)]:
                         node_id = int(node[1:]) - 1
-                        if self.state[node_id][1] == 1:  # ´Ë³¬±ßµ±ÖÐÓÐI×´Ì¬½Úµã
+                        if self.state[node_id][1] == 1:  # æ­¤è¶…è¾¹å½“ä¸­æœ‰IçŠ¶æ€èŠ‚ç‚¹
                             for i in self.scenes['E' + str(e + 1)]:
                                 i_id = int(i[1:]) - 1
-                                if self.state[i_id][1] == 0:  # ´¦ÓÚSÌ¬µÄ½ÚµãÒÔÒ»¶¨¸ÅÂÊ¸ÐÈ¾
-                                    if random.randint(1, 100) <= 100 * beita:  # ¸ÐÈ¾
-                                        self.IStateNodes.append(i_id + 1)  # I×´Ì¬½Úµãµ±ÖÐÌí¼Ó´Ë½Úµã±àºÅ
-                # ÐÞ¸ÄÊý¾Ý
+                                if self.state[i_id][1] == 0:  # å¤„äºŽSæ€çš„èŠ‚ç‚¹ä»¥ä¸€å®šæ¦‚çŽ‡æ„ŸæŸ“
+                                    if random.randint(1, 100) <= 100 * beita:  # æ„ŸæŸ“
+                                        self.IStateNodes.append(i_id + 1)  # IçŠ¶æ€èŠ‚ç‚¹å½“ä¸­æ·»åŠ æ­¤èŠ‚ç‚¹ç¼–å·
+                # ä¿®æ”¹æ•°æ®
                 self.IStateNodes = [i for i in self.IStateNodes if i not in recoverNodes]
-                self.IStateNodes = list(set(self.IStateNodes))  # È¥³ýÖØ¸´½Úµã
-                # print("»Ö¸´½Úµã£º",recoverNodes)
-                # print("¸ÐÈ¾½Úµã£º",self.IStateNodes)
+                self.IStateNodes = list(set(self.IStateNodes))  # åŽ»é™¤é‡å¤èŠ‚ç‚¹
+                # print("æ¢å¤èŠ‚ç‚¹ï¼š",recoverNodes)
+                # print("æ„ŸæŸ“èŠ‚ç‚¹ï¼š",self.IStateNodes)
                 for i in self.IStateNodes:
                     self.state[i - 1][1] = 1
                 for i in recoverNodes:
@@ -332,174 +332,174 @@ class InfoSpreading(object):
         print()
 
     def spr_cp(self, beita, gama, n, select):
-        # ÖØ¸´n´ÎÊµÑé
-        selectnode = 0  # ¼ÇÂ¼³õÊ¼´«²¥½Úµã
+        # é‡å¤næ¬¡å®žéªŒ
+        selectnode = 0  # è®°å½•åˆå§‹ä¼ æ’­èŠ‚ç‚¹
         for repeat in range(self.repeatNum):
-            print("\rÖØ¸´ÊµÑé½ø¶È£º" + str(repeat + 1) + "/" + str(self.repeatNum), end="")
-            # ³õÊ¼»¯
-            self.IStateNodes = []  # ´æ·ÅI×´Ì¬½Úµã±àºÅ
-            self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
+            print("\ré‡å¤å®žéªŒè¿›åº¦ï¼š" + str(repeat + 1) + "/" + str(self.repeatNum), end="")
+            # åˆå§‹åŒ–
+            self.IStateNodes = []  # å­˜æ”¾IçŠ¶æ€èŠ‚ç‚¹ç¼–å·
+            self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
             for i in range(self.nodesNum):
                 self.state[i][0] = i + 1
-                self.state[i][1] = 0  # 0±íÊ¾S×´Ì¬
+                self.state[i][1] = 0  # 0è¡¨ç¤ºSçŠ¶æ€
             if repeat == 0:
                 if select == "random":
-                    selectnode = self.randomHi()  # Ëæ»úÑ¡Ôñ½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.randomHi()  # éšæœºé€‰æ‹©èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "avgHi":
-                    selectnode = self.avgHi()  # Ñ¡ÔñÆ½¾ù³¬¶È½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.avgHi()  # é€‰æ‹©å¹³å‡è¶…åº¦èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "maxHi":
-                    selectnode = self.maxHi()  # Ñ¡Ôñ³¬¶È×î´ó½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.maxHi()  # é€‰æ‹©è¶…åº¦æœ€å¤§èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "minHi":
-                    selectnode = self.minHi()  # Ñ¡Ôñ³¬¶È×îÐ¡½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.minHi()  # é€‰æ‹©è¶…åº¦æœ€å°èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
             self.IStateNodes.append(selectnode)
-            self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
+            self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
 
-            # ½øÐÐ t ¸öÊ±¼ä²½´«²¥
+            # è¿›è¡Œ t ä¸ªæ—¶é—´æ­¥ä¼ æ’­
             for t in range(self.timeStep):
-                recoverNodes = []  # »Ö¸´½ÚµãÁÐ±í
+                recoverNodes = []  # æ¢å¤èŠ‚ç‚¹åˆ—è¡¨
                 if t >= 1:
                     for i in self.IStateNodes:
-                        if random.randint(1, 100) <= 100 * gama:  # I»Ö¸´ÎªS
+                        if random.randint(1, 100) <= 100 * gama:  # Iæ¢å¤ä¸ºS
                             recoverNodes.append(i)
 
                 for node in self.IStateNodes:
-                    chosen_edge = random.choice(self.node_to_edge["v" + str(node)]) #È¡³öI½Úµã¹ØÁªµÄËùÓÐ³¬±ß
+                    chosen_edge = random.choice(self.node_to_edge["v" + str(node)]) #å–å‡ºIèŠ‚ç‚¹å…³è”çš„æ‰€æœ‰è¶…è¾¹
                     # print(chosen_edge)
                     for chosen_node in self.scenes[chosen_edge]:
-                        if self.state[int(chosen_node[1:]) - 1][1] == 0:  # ´¦ÓÚSÌ¬µÄ½ÚµãÒÔÒ»¶¨¸ÅÂÊ¸ÐÈ¾
-                            if random.randint(1, 100) <= 100 * beita:  # ¸ÐÈ¾
-                                self.IStateNodes.append(int(chosen_node[1:]))  # I×´Ì¬½Úµãµ±ÖÐÌí¼Ó´Ë½Úµã±àºÅ
+                        if self.state[int(chosen_node[1:]) - 1][1] == 0:  # å¤„äºŽSæ€çš„èŠ‚ç‚¹ä»¥ä¸€å®šæ¦‚çŽ‡æ„ŸæŸ“
+                            if random.randint(1, 100) <= 100 * beita:  # æ„ŸæŸ“
+                                self.IStateNodes.append(int(chosen_node[1:]))  # IçŠ¶æ€èŠ‚ç‚¹å½“ä¸­æ·»åŠ æ­¤èŠ‚ç‚¹ç¼–å·
 
-                #self.incidenceMatrix ÐÐÎª½Úµã£¬ÁÐÎª³¬±ß
-                # ÐÞ¸ÄÊý¾Ý£¬¸üÐÂ×´Ì¬
-                self.IStateNodes = [i for i in self.IStateNodes if i not in recoverNodes]  # É¾³ý»Ö¸´µÄ½Úµã
-                self.IStateNodes = list(set(self.IStateNodes))  # È¥³ýÖØ¸´½Úµã
+                #self.incidenceMatrix è¡Œä¸ºèŠ‚ç‚¹ï¼Œåˆ—ä¸ºè¶…è¾¹
+                # ä¿®æ”¹æ•°æ®ï¼Œæ›´æ–°çŠ¶æ€
+                self.IStateNodes = [i for i in self.IStateNodes if i not in recoverNodes]  # åˆ é™¤æ¢å¤çš„èŠ‚ç‚¹
+                self.IStateNodes = list(set(self.IStateNodes))  # åŽ»é™¤é‡å¤èŠ‚ç‚¹
 
-                # ¸üÐÂ×´Ì¬
+                # æ›´æ–°çŠ¶æ€
                 for i in self.IStateNodes:
-                    self.state[i - 1][1] = 1  # ½«I×´Ì¬½ÚµãµÄ×´Ì¬ÉèÎªI
+                    self.state[i - 1][1] = 1  # å°†IçŠ¶æ€èŠ‚ç‚¹çš„çŠ¶æ€è®¾ä¸ºI
                 for i in recoverNodes:
-                    self.state[i - 1][1] = 0  # »Ö¸´½ÚµãµÄ×´Ì¬ÉèÎªS
+                    self.state[i - 1][1] = 0  # æ¢å¤èŠ‚ç‚¹çš„çŠ¶æ€è®¾ä¸ºS
 
-                # ¼ÇÂ¼µ±Ç°Ê±¿ÌI×´Ì¬½ÚµãµÄ±ÈÀý
+                # è®°å½•å½“å‰æ—¶åˆ»IçŠ¶æ€èŠ‚ç‚¹çš„æ¯”ä¾‹
                 if len(self.IStateNodes) != 0:
                     self.imageData[t][n] += len(self.IStateNodes) / self.nodesNum / self.repeatNum
 
             print()
 
     def spr_cp_raw(self, beita, gama, n, select):
-        # ÖØ¸´n´ÎÊµÑé
-        selectnode = 0  # ¼ÇÂ¼³õÊ¼´«²¥½Úµã
-        edgesNum = len(self.incidenceMatrix[0]) #³¬ÍøÂçµÄ³¬±ßÊý
+        # é‡å¤næ¬¡å®žéªŒ
+        selectnode = 0  # è®°å½•åˆå§‹ä¼ æ’­èŠ‚ç‚¹
+        edgesNum = len(self.incidenceMatrix[0]) #è¶…ç½‘ç»œçš„è¶…è¾¹æ•°
         for repeat in range(self.repeatNum):
-            print("\rÖØ¸´ÊµÑé½ø¶È£º" + str(repeat + 1) + "/" + str(self.repeatNum), end="")
-            # ³õÊ¼»¯
-            self.IStateNodes = []  # ´æ·ÅI×´Ì¬½Úµã±àºÅ
-            self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
+            print("\ré‡å¤å®žéªŒè¿›åº¦ï¼š" + str(repeat + 1) + "/" + str(self.repeatNum), end="")
+            # åˆå§‹åŒ–
+            self.IStateNodes = []  # å­˜æ”¾IçŠ¶æ€èŠ‚ç‚¹ç¼–å·
+            self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
             for i in range(self.nodesNum):
                 self.state[i][0] = i + 1
-                self.state[i][1] = 0  # 0±íÊ¾S×´Ì¬
+                self.state[i][1] = 0  # 0è¡¨ç¤ºSçŠ¶æ€
             if repeat == 0:
                 if select == "random":
-                    selectnode = self.randomHi()  # Ëæ»úÑ¡Ôñ½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.randomHi()  # éšæœºé€‰æ‹©èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "avgHi":
-                    selectnode = self.avgHi()  # Ñ¡ÔñÆ½¾ù³¬¶È½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.avgHi()  # é€‰æ‹©å¹³å‡è¶…åº¦èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "maxHi":
-                    selectnode = self.maxHi()  # Ñ¡Ôñ³¬¶È×î´ó½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.maxHi()  # é€‰æ‹©è¶…åº¦æœ€å¤§èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "minHi":
-                    selectnode = self.minHi()  # Ñ¡Ôñ³¬¶È×îÐ¡½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.minHi()  # é€‰æ‹©è¶…åº¦æœ€å°èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
             self.IStateNodes.append(selectnode)
-            self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
+            self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
 
-            # ½øÐÐ t ¸öÊ±¼ä²½´«²¥
+            # è¿›è¡Œ t ä¸ªæ—¶é—´æ­¥ä¼ æ’­
             for t in range(self.timeStep):
-                recoverNodes = []  # »Ö¸´½ÚµãÁÐ±í
+                recoverNodes = []  # æ¢å¤èŠ‚ç‚¹åˆ—è¡¨
                 if t >= 1:
                     for i in self.IStateNodes:
-                        if random.randint(1, 100) <= 100 * gama:  # I»Ö¸´ÎªS
+                        if random.randint(1, 100) <= 100 * gama:  # Iæ¢å¤ä¸ºS
                             recoverNodes.append(i)
 
                 # for node in self.IStateNodes:
-                #     chosen_edge = random.choice(self.node_to_edge["v" + str(node)]) #È¡³öI½Úµã¹ØÁªµÄËùÓÐ³¬±ß
+                #     chosen_edge = random.choice(self.node_to_edge["v" + str(node)]) #å–å‡ºIèŠ‚ç‚¹å…³è”çš„æ‰€æœ‰è¶…è¾¹
                 #     # print(chosen_edge)
                 #     for chosen_node in self.scenes[chosen_edge]:
-                #         if self.state[int(chosen_node[1:]) - 1][1] == 0:  # ´¦ÓÚSÌ¬µÄ½ÚµãÒÔÒ»¶¨¸ÅÂÊ¸ÐÈ¾
-                #             if random.randint(1, 100) <= 100 * beita:  # ¸ÐÈ¾
-                #                 self.IStateNodes.append(int(chosen_node[1:]))  # I×´Ì¬½Úµãµ±ÖÐÌí¼Ó´Ë½Úµã±àºÅ
+                #         if self.state[int(chosen_node[1:]) - 1][1] == 0:  # å¤„äºŽSæ€çš„èŠ‚ç‚¹ä»¥ä¸€å®šæ¦‚çŽ‡æ„ŸæŸ“
+                #             if random.randint(1, 100) <= 100 * beita:  # æ„ŸæŸ“
+                #                 self.IStateNodes.append(int(chosen_node[1:]))  # IçŠ¶æ€èŠ‚ç‚¹å½“ä¸­æ·»åŠ æ­¤èŠ‚ç‚¹ç¼–å·
 
                 for node, edge_list in enumerate(self.incidenceMatrix, start=1):
-                    if self.state[node - 1][1] == 1:  # ¸Ã½ÚµãÊÇ·ñÎªI×´Ì¬½Úµã£¬ÊÇÔòËæ»úÑ¡ÔñÒ»Ìõ³¬±ß½øÐÐ´«²¥¡£
+                    if self.state[node - 1][1] == 1:  # è¯¥èŠ‚ç‚¹æ˜¯å¦ä¸ºIçŠ¶æ€èŠ‚ç‚¹ï¼Œæ˜¯åˆ™éšæœºé€‰æ‹©ä¸€æ¡è¶…è¾¹è¿›è¡Œä¼ æ’­ã€‚
                         edges = []
                         for i in range(edgesNum):
                             if edge_list[i] == 1:
                                 edges.append('E' + str(i + 1))
                         chosen_edge = random.choice(edges)
                         for chosen_node in self.scenes[chosen_edge]:
-                            if self.state[int(chosen_node[1:]) - 1][1] == 0:  # ´¦ÓÚSÌ¬µÄ½ÚµãÒÔÒ»¶¨¸ÅÂÊ¸ÐÈ¾
-                                if random.randint(1, 100) <= 100 * beita:  # ¸ÐÈ¾
-                                    self.IStateNodes.append(int(chosen_node[1:]))  # I×´Ì¬½Úµãµ±ÖÐÌí¼Ó´Ë½Úµã±àºÅ
+                            if self.state[int(chosen_node[1:]) - 1][1] == 0:  # å¤„äºŽSæ€çš„èŠ‚ç‚¹ä»¥ä¸€å®šæ¦‚çŽ‡æ„ŸæŸ“
+                                if random.randint(1, 100) <= 100 * beita:  # æ„ŸæŸ“
+                                    self.IStateNodes.append(int(chosen_node[1:]))  # IçŠ¶æ€èŠ‚ç‚¹å½“ä¸­æ·»åŠ æ­¤èŠ‚ç‚¹ç¼–å·
 
-                #self.incidenceMatrix ÐÐÎª½Úµã£¬ÁÐÎª³¬±ß
-                # ÐÞ¸ÄÊý¾Ý£¬¸üÐÂ×´Ì¬
-                self.IStateNodes = [i for i in self.IStateNodes if i not in recoverNodes]  # É¾³ý»Ö¸´µÄ½Úµã
-                self.IStateNodes = list(set(self.IStateNodes))  # È¥³ýÖØ¸´½Úµã
+                #self.incidenceMatrix è¡Œä¸ºèŠ‚ç‚¹ï¼Œåˆ—ä¸ºè¶…è¾¹
+                # ä¿®æ”¹æ•°æ®ï¼Œæ›´æ–°çŠ¶æ€
+                self.IStateNodes = [i for i in self.IStateNodes if i not in recoverNodes]  # åˆ é™¤æ¢å¤çš„èŠ‚ç‚¹
+                self.IStateNodes = list(set(self.IStateNodes))  # åŽ»é™¤é‡å¤èŠ‚ç‚¹
 
-                # ¸üÐÂ×´Ì¬
+                # æ›´æ–°çŠ¶æ€
                 for i in self.IStateNodes:
-                    self.state[i - 1][1] = 1  # ½«I×´Ì¬½ÚµãµÄ×´Ì¬ÉèÎªI
+                    self.state[i - 1][1] = 1  # å°†IçŠ¶æ€èŠ‚ç‚¹çš„çŠ¶æ€è®¾ä¸ºI
                 for i in recoverNodes:
-                    self.state[i - 1][1] = 0  # »Ö¸´½ÚµãµÄ×´Ì¬ÉèÎªS
+                    self.state[i - 1][1] = 0  # æ¢å¤èŠ‚ç‚¹çš„çŠ¶æ€è®¾ä¸ºS
 
-                # ¼ÇÂ¼µ±Ç°Ê±¿ÌI×´Ì¬½ÚµãµÄ±ÈÀý
+                # è®°å½•å½“å‰æ—¶åˆ»IçŠ¶æ€èŠ‚ç‚¹çš„æ¯”ä¾‹
                 if len(self.IStateNodes) != 0:
                     self.imageData[t][n] += len(self.IStateNodes) / self.nodesNum / self.repeatNum
 
             print()
 
-    # ÐÅÏ¢´«²¥
+    # ä¿¡æ¯ä¼ æ’­
     def spr1(self, beita, gama, n, select):
-        # ÖØ¸´n´ÎÊµÑé
-        selectnode = 0  # ¼ÇÂ¼³õÊ¼´«²¥½Úµã
+        # é‡å¤næ¬¡å®žéªŒ
+        selectnode = 0  # è®°å½•åˆå§‹ä¼ æ’­èŠ‚ç‚¹
         for repeat in range(self.repeatNum):
-            print("\rÖØ¸´ÊµÑé½ø¶È£º" + str(repeat + 1)+"/"+str(self.repeatNum), end="")
-            # ³õÊ¼»¯
-            self.IStateNodes = []  # ´æ·ÅI×´Ì¬½Úµã±àºÅ
-            self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
+            print("\ré‡å¤å®žéªŒè¿›åº¦ï¼š" + str(repeat + 1)+"/"+str(self.repeatNum), end="")
+            # åˆå§‹åŒ–
+            self.IStateNodes = []  # å­˜æ”¾IçŠ¶æ€èŠ‚ç‚¹ç¼–å·
+            self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
             for i in range(self.nodesNum):
                 self.state[i][0] = i + 1
-                self.state[i][1] = 0  # 0±íÊ¾S×´Ì¬
+                self.state[i][1] = 0  # 0è¡¨ç¤ºSçŠ¶æ€
             if repeat == 0:
                 if select == "random":
-                    selectnode = self.randomHi()  # Ëæ»úÑ¡Ôñ½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.randomHi()  # éšæœºé€‰æ‹©èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "avgHi":
-                    selectnode = self.avgHi()  # Ñ¡ÔñÆ½¾ù³¬¶È½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.avgHi()  # é€‰æ‹©å¹³å‡è¶…åº¦èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "maxHi":
-                    selectnode = self.maxHi()  # Ñ¡Ôñ³¬¶È×î´ó½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.maxHi()  # é€‰æ‹©è¶…åº¦æœ€å¤§èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "minHi":
-                    selectnode = self.minHi()  # Ñ¡Ôñ³¬¶È×îÐ¡½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.minHi()  # é€‰æ‹©è¶…åº¦æœ€å°èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
             self.IStateNodes.append(selectnode)
-            self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
+            self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
 
-            # ½øÐÐt¸öÊ±¼ä²½´«²¥
+            # è¿›è¡Œtä¸ªæ—¶é—´æ­¥ä¼ æ’­
             for t in range(self.timeStep):
                 recoverNodes = []
                 if t >= 1:
                     for i in self.IStateNodes:
-                        if random.randint(1, 100) <= 100 * gama:  # I»Ö¸´ÎªS
+                        if random.randint(1, 100) <= 100 * gama:  # Iæ¢å¤ä¸ºS
                             recoverNodes.append(i)
-                # É¸Ñ¡ÓÐI×´Ì¬½ÚµãµÄ³¬±ß
+                # ç­›é€‰æœ‰IçŠ¶æ€èŠ‚ç‚¹çš„è¶…è¾¹
                 for e in range(len(self.incidenceMatrix[0])):
                     for node in self.scenes['E' + str(e + 1)]:
-                        if self.state[int(node[1:]) - 1][1] == 1:  # ´Ë³¬±ßµ±ÖÐÓÐI×´Ì¬½Úµã
+                        if self.state[int(node[1:]) - 1][1] == 1:  # æ­¤è¶…è¾¹å½“ä¸­æœ‰IçŠ¶æ€èŠ‚ç‚¹
                             for i in self.scenes['E' + str(e + 1)]:
-                                if self.state[int(i[1:]) - 1][1] == 0:  # ´¦ÓÚSÌ¬µÄ½ÚµãÒÔÒ»¶¨¸ÅÂÊ¸ÐÈ¾
-                                    if random.randint(1, 100) <= 100 * beita:  # ¸ÐÈ¾
-                                        self.IStateNodes.append(int(i[1:]))  # I×´Ì¬½Úµãµ±ÖÐÌí¼Ó´Ë½Úµã±àºÅ
-                # ÐÞ¸ÄÊý¾Ý
+                                if self.state[int(i[1:]) - 1][1] == 0:  # å¤„äºŽSæ€çš„èŠ‚ç‚¹ä»¥ä¸€å®šæ¦‚çŽ‡æ„ŸæŸ“
+                                    if random.randint(1, 100) <= 100 * beita:  # æ„ŸæŸ“
+                                        self.IStateNodes.append(int(i[1:]))  # IçŠ¶æ€èŠ‚ç‚¹å½“ä¸­æ·»åŠ æ­¤èŠ‚ç‚¹ç¼–å·
+                # ä¿®æ”¹æ•°æ®
                 self.IStateNodes = [i for i in self.IStateNodes if i not in recoverNodes]
-                self.IStateNodes = list(set(self.IStateNodes))  # È¥³ýÖØ¸´½Úµã
-                # print("»Ö¸´½Úµã£º",recoverNodes)
-                # print("¸ÐÈ¾½Úµã£º",self.IStateNodes)
+                self.IStateNodes = list(set(self.IStateNodes))  # åŽ»é™¤é‡å¤èŠ‚ç‚¹
+                # print("æ¢å¤èŠ‚ç‚¹ï¼š",recoverNodes)
+                # print("æ„ŸæŸ“èŠ‚ç‚¹ï¼š",self.IStateNodes)
                 for i in self.IStateNodes:
                     self.state[i - 1][1] = 1
                 for i in recoverNodes:
@@ -512,53 +512,53 @@ class InfoSpreading(object):
         print()
 
     def spr1_cp(self, beita, gama, n, select):
-        # ÖØ¸´n´ÎÊµÑé
-        selectnode = 0  # ¼ÇÂ¼³õÊ¼´«²¥½Úµã
-        edgesNum = len(self.incidenceMatrix[0]) #³¬ÍøÂçµÄ³¬±ßÊý
+        # é‡å¤næ¬¡å®žéªŒ
+        selectnode = 0  # è®°å½•åˆå§‹ä¼ æ’­èŠ‚ç‚¹
+        edgesNum = len(self.incidenceMatrix[0]) #è¶…ç½‘ç»œçš„è¶…è¾¹æ•°
         for repeat in range(self.repeatNum):
-            print("\rÖØ¸´ÊµÑé½ø¶È£º" + str(repeat + 1)+"/"+str(self.repeatNum), end="")
-            # ³õÊ¼»¯
-            self.IStateNodes = []  # ´æ·ÅI×´Ì¬½Úµã±àºÅ
-            self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
+            print("\ré‡å¤å®žéªŒè¿›åº¦ï¼š" + str(repeat + 1)+"/"+str(self.repeatNum), end="")
+            # åˆå§‹åŒ–
+            self.IStateNodes = []  # å­˜æ”¾IçŠ¶æ€èŠ‚ç‚¹ç¼–å·
+            self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
             for i in range(self.nodesNum):
                 self.state[i][0] = i + 1
-                self.state[i][1] = 0  # 0±íÊ¾S×´Ì¬
+                self.state[i][1] = 0  # 0è¡¨ç¤ºSçŠ¶æ€
             if repeat == 0:
                 if select == "random":
-                    selectnode = self.randomHi()  # Ëæ»úÑ¡Ôñ½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.randomHi()  # éšæœºé€‰æ‹©èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "avgHi":
-                    selectnode = self.avgHi()  # Ñ¡ÔñÆ½¾ù³¬¶È½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.avgHi()  # é€‰æ‹©å¹³å‡è¶…åº¦èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "maxHi":
-                    selectnode = self.maxHi()  # Ñ¡Ôñ³¬¶È×î´ó½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.maxHi()  # é€‰æ‹©è¶…åº¦æœ€å¤§èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "minHi":
-                    selectnode = self.minHi()  # Ñ¡Ôñ³¬¶È×îÐ¡½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.minHi()  # é€‰æ‹©è¶…åº¦æœ€å°èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
             self.IStateNodes.append(selectnode)
-            self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
+            self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
 
-            # ½øÐÐt¸öÊ±¼ä²½´«²¥
+            # è¿›è¡Œtä¸ªæ—¶é—´æ­¥ä¼ æ’­
             for t in range(self.timeStep):
                 recoverNodes = []
                 if t >= 1:
                     for i in self.IStateNodes:
-                        if random.randint(1, 100) <= 100 * gama:  # I»Ö¸´ÎªS
+                        if random.randint(1, 100) <= 100 * gama:  # Iæ¢å¤ä¸ºS
                             recoverNodes.append(i)
-                # É¸Ñ¡ÓÐI×´Ì¬½ÚµãµÄ³¬±ß
+                # ç­›é€‰æœ‰IçŠ¶æ€èŠ‚ç‚¹çš„è¶…è¾¹
                 for node, edge_list in enumerate(self.incidenceMatrix, start=1):
-                    if self.state[node - 1][1] == 1:  # ¸Ã½ÚµãÊÇ·ñÎªI×´Ì¬½Úµã£¬ÊÇÔòËæ»úÑ¡ÔñÒ»Ìõ³¬±ß½øÐÐ´«²¥¡£
+                    if self.state[node - 1][1] == 1:  # è¯¥èŠ‚ç‚¹æ˜¯å¦ä¸ºIçŠ¶æ€èŠ‚ç‚¹ï¼Œæ˜¯åˆ™éšæœºé€‰æ‹©ä¸€æ¡è¶…è¾¹è¿›è¡Œä¼ æ’­ã€‚
                         edges = []
                         for i in range(edgesNum):
                             if edge_list[i] == 1:
                                 edges.append('E' + str(i + 1))
                         chosen_edge = random.choice(edges)
                         for chosen_node in self.scenes[chosen_edge]:
-                            if self.state[int(chosen_node[1:]) - 1][1] == 0:  # ´¦ÓÚSÌ¬µÄ½ÚµãÒÔÒ»¶¨¸ÅÂÊ¸ÐÈ¾
-                                if random.randint(1, 100) <= 100 * beita:  # ¸ÐÈ¾
-                                    self.IStateNodes.append(int(chosen_node[1:]))  # I×´Ì¬½Úµãµ±ÖÐÌí¼Ó´Ë½Úµã±àºÅ
-                # ÐÞ¸ÄÊý¾Ý
+                            if self.state[int(chosen_node[1:]) - 1][1] == 0:  # å¤„äºŽSæ€çš„èŠ‚ç‚¹ä»¥ä¸€å®šæ¦‚çŽ‡æ„ŸæŸ“
+                                if random.randint(1, 100) <= 100 * beita:  # æ„ŸæŸ“
+                                    self.IStateNodes.append(int(chosen_node[1:]))  # IçŠ¶æ€èŠ‚ç‚¹å½“ä¸­æ·»åŠ æ­¤èŠ‚ç‚¹ç¼–å·
+                # ä¿®æ”¹æ•°æ®
                 self.IStateNodes = [i for i in self.IStateNodes if i not in recoverNodes]
-                self.IStateNodes = list(set(self.IStateNodes))  # È¥³ýÖØ¸´½Úµã
-                # print("»Ö¸´½Úµã£º",recoverNodes)
-                # print("¸ÐÈ¾½Úµã£º",self.IStateNodes)
+                self.IStateNodes = list(set(self.IStateNodes))  # åŽ»é™¤é‡å¤èŠ‚ç‚¹
+                # print("æ¢å¤èŠ‚ç‚¹ï¼š",recoverNodes)
+                # print("æ„ŸæŸ“èŠ‚ç‚¹ï¼š",self.IStateNodes)
                 for i in self.IStateNodes:
                     self.state[i - 1][1] = 1
                 for i in recoverNodes:
@@ -570,54 +570,54 @@ class InfoSpreading(object):
                 #     break
         print()
 
-    # ÐÅÏ¢´«²¥
+    # ä¿¡æ¯ä¼ æ’­
     def sprSteadyState(self, beita, gama, n, select):
-        self.imageData = np.zeros((self.timeStep, 20), float)  # ´æ·ÅÃ¿¸öÊ±¼ä²½µÄ¦ÑµÈÏà¹ØÊý¾Ý
-        # ÖØ¸´n´ÎÊµÑé
-        selectnode = 0  # ¼ÇÂ¼³õÊ¼´«²¥½Úµã
+        self.imageData = np.zeros((self.timeStep, 20), float)  # å­˜æ”¾æ¯ä¸ªæ—¶é—´æ­¥çš„Ïç­‰ç›¸å…³æ•°æ®
+        # é‡å¤næ¬¡å®žéªŒ
+        selectnode = 0  # è®°å½•åˆå§‹ä¼ æ’­èŠ‚ç‚¹
         for repeat in range(self.repeatNum):
-            # print("\rÖØ¸´ÊµÑé½ø¶È£º" + str(repeat + 1) + "/" + str(self.repeatNum), end="")
-            # ³õÊ¼»¯
-            self.IStateNodes = []  # ´æ·ÅI×´Ì¬½Úµã±àºÅ
-            self.state = np.zeros((self.nodesNum, 2), int)  # ½Úµã£¬×´Ì¬(S(0),I(1))
+            # print("\ré‡å¤å®žéªŒè¿›åº¦ï¼š" + str(repeat + 1) + "/" + str(self.repeatNum), end="")
+            # åˆå§‹åŒ–
+            self.IStateNodes = []  # å­˜æ”¾IçŠ¶æ€èŠ‚ç‚¹ç¼–å·
+            self.state = np.zeros((self.nodesNum, 2), int)  # èŠ‚ç‚¹ï¼ŒçŠ¶æ€(S(0),I(1))
             for i in range(self.nodesNum):
                 self.state[i][0] = i + 1
-                self.state[i][1] = 0  # 0±íÊ¾S×´Ì¬
+                self.state[i][1] = 0  # 0è¡¨ç¤ºSçŠ¶æ€
 
             if repeat == 0:
                 if select == "random":
-                    selectnode = self.randomHi()  # Ëæ»úÑ¡Ôñ½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.randomHi()  # éšæœºé€‰æ‹©èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "avgHi":
-                    selectnode = self.avgHi()  # Ñ¡ÔñÆ½¾ù³¬¶È½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.avgHi()  # é€‰æ‹©å¹³å‡è¶…åº¦èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "maxHi":
-                    selectnode = self.maxHi()  # Ñ¡Ôñ³¬¶È×î´ó½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.maxHi()  # é€‰æ‹©è¶…åº¦æœ€å¤§èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
                 elif select == "minHi":
-                    selectnode = self.minHi()  # Ñ¡Ôñ³¬¶È×îÐ¡½Úµã×÷Îª´«²¥½Úµã
+                    selectnode = self.minHi()  # é€‰æ‹©è¶…åº¦æœ€å°èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
             self.IStateNodes.append(selectnode)
-            self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
-            edgesNum = len(self.incidenceMatrix[0])  # ³¬ÍøÂçµÄ³¬±ßÊý
-            # ½øÐÐt¸öÊ±¼ä²½´«²¥
+            self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
+            edgesNum = len(self.incidenceMatrix[0])  # è¶…ç½‘ç»œçš„è¶…è¾¹æ•°
+            # è¿›è¡Œtä¸ªæ—¶é—´æ­¥ä¼ æ’­
             for t in range(self.timeStep):
                 recoverNodes = []
                 if t >= 1:
                     for i in self.IStateNodes:
-                        if random.randint(1, 100) <= 100 * gama:  # I»Ö¸´ÎªS
+                        if random.randint(1, 100) <= 100 * gama:  # Iæ¢å¤ä¸ºS
                             recoverNodes.append(i)
-                # É¸Ñ¡ÓÐI×´Ì¬½ÚµãµÄ³¬±ß
+                # ç­›é€‰æœ‰IçŠ¶æ€èŠ‚ç‚¹çš„è¶…è¾¹
                 for e in range(edgesNum):
                     for node in self.scenes['E' + str(e + 1)]:
                         node_id = int(node[1:]) - 1
-                        if self.state[node_id][1] == 1:  # ´Ë³¬±ßµ±ÖÐÓÐI×´Ì¬½Úµã
+                        if self.state[node_id][1] == 1:  # æ­¤è¶…è¾¹å½“ä¸­æœ‰IçŠ¶æ€èŠ‚ç‚¹
                             for i in self.scenes['E' + str(e + 1)]:
                                 i_id = int(i[1:]) - 1
-                                if self.state[i_id][1] == 0:  # ´¦ÓÚSÌ¬µÄ½ÚµãÒÔÒ»¶¨¸ÅÂÊ¸ÐÈ¾
-                                    if random.randint(1, 100) <= 100 * beita:  # ¸ÐÈ¾
-                                        self.IStateNodes.append(i_id + 1)  # I×´Ì¬½Úµãµ±ÖÐÌí¼Ó´Ë½Úµã±àºÅ
-                # ÐÞ¸ÄÊý¾Ý
+                                if self.state[i_id][1] == 0:  # å¤„äºŽSæ€çš„èŠ‚ç‚¹ä»¥ä¸€å®šæ¦‚çŽ‡æ„ŸæŸ“
+                                    if random.randint(1, 100) <= 100 * beita:  # æ„ŸæŸ“
+                                        self.IStateNodes.append(i_id + 1)  # IçŠ¶æ€èŠ‚ç‚¹å½“ä¸­æ·»åŠ æ­¤èŠ‚ç‚¹ç¼–å·
+                # ä¿®æ”¹æ•°æ®
                 self.IStateNodes = [i for i in self.IStateNodes if i not in recoverNodes]
-                self.IStateNodes = list(set(self.IStateNodes))  # È¥³ýÖØ¸´½Úµã
-                # print("»Ö¸´½Úµã£º",recoverNodes)
-                # print("¸ÐÈ¾½Úµã£º",self.IStateNodes)
+                self.IStateNodes = list(set(self.IStateNodes))  # åŽ»é™¤é‡å¤èŠ‚ç‚¹
+                # print("æ¢å¤èŠ‚ç‚¹ï¼š",recoverNodes)
+                # print("æ„ŸæŸ“èŠ‚ç‚¹ï¼š",self.IStateNodes)
                 for i in self.IStateNodes:
                     self.state[i - 1][1] = 1
                 for i in recoverNodes:
@@ -631,15 +631,15 @@ class InfoSpreading(object):
         # print(self.stateData)
         # print()
 
-    # Ëæ»úÑ¡Ôñ½Úµã×÷Îª´«²¥½Úµã
+    # éšæœºé€‰æ‹©èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
     def randomHi(self):
-        # Ëæ»úÑ¡Ôñ³õÊ¼Ò»¸öI×´Ì¬½Úµã
+        # éšæœºé€‰æ‹©åˆå§‹ä¸€ä¸ªIçŠ¶æ€èŠ‚ç‚¹
         selectnode = random.randint(1, self.nodesNum)
         return selectnode
         # self.IStateNodes.append(selectnode)
-        # self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
+        # self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
 
-    # Ñ¡ÔñÆ½¾ù³¬¶È½Úµã×÷Îª´«²¥½Úµã
+    # é€‰æ‹©å¹³å‡è¶…åº¦èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
     def avgHi(self):
         H = hnx.Hypergraph(self.scenes)
         degreeList = hnx.degree_dist(H)
@@ -649,27 +649,27 @@ class InfoSpreading(object):
         selectnode = degreeList.index(avg) + 1
         return selectnode
         # self.IStateNodes.append(selectnode)
-        # self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
+        # self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
 
-    # Ñ¡Ôñ³¬¶È×î´óµÄ½Úµã×÷Îª´«²¥½Úµã
+    # é€‰æ‹©è¶…åº¦æœ€å¤§çš„èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
     def maxHi(self):
         H = hnx.Hypergraph(self.scenes)
         degreeList = hnx.degree_dist(H)
         selectnode = degreeList.index(max(degreeList))+1
         return selectnode
         # self.IStateNodes.append(selectnode)
-        # self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
+        # self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
 
-    # Ñ¡Ôñ³¬¶È×îÐ¡µÄ½Úµã×÷Îª´«²¥½Úµã
+    # é€‰æ‹©è¶…åº¦æœ€å°çš„èŠ‚ç‚¹ä½œä¸ºä¼ æ’­èŠ‚ç‚¹
     def minHi(self):
         H = hnx.Hypergraph(self.scenes)
         degreeList = hnx.degree_dist(H)
         selectnode = degreeList.index(min(degreeList)) + 1
         return selectnode
         # self.IStateNodes.append(selectnode)
-        # self.state[selectnode - 1][1] = 1  # 1±íÊ¾I×´Ì¬
+        # self.state[selectnode - 1][1] = 1  # 1è¡¨ç¤ºIçŠ¶æ€
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw(self):
         t = [i/100 for i in range(0, self.betaNum)]
         yvalue0 = []
@@ -687,24 +687,24 @@ class InfoSpreading(object):
             # yvalue5.append(self.imageData[i][5])
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         ax.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=8,)
-        #ax.legend(labels=[r"$¦Â=0.05$", r"$¦Â=0.1$", r"$¦Â=0.2$"], ncol=1, fontsize=20)
-        #plt.figure("²»Í¬¦ÂµÄÖªÇé½ÚµãÃÜ¶ÈÍ¼", figsize=(10, 8))
-        plt.xlabel("¦Â", fontsize=15)
-        plt.ylabel("¦Ñ", fontsize=15)
+        #ax.legend(labels=[r"$Î²=0.05$", r"$Î²=0.1$", r"$Î²=0.2$"], ncol=1, fontsize=20)
+        #plt.figure("ä¸åŒÎ²çš„çŸ¥æƒ…èŠ‚ç‚¹å¯†åº¦å›¾", figsize=(10, 8))
+        plt.xlabel("Î²", fontsize=15)
+        plt.ylabel("Ï", fontsize=15)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
         #plt.legend(["p=0.6",])
-        # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        plt.savefig("img.svg",format='svg',dpi=600)  # svg¸ñÊ½
+        # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        plt.savefig("img.svg",format='svg',dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw2(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -716,17 +716,17 @@ class InfoSpreading(object):
             yvalue1.append(self.imageData[i][1])
             yvalue2.append(self.imageData[i][2])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-s',
         #          t, yvalue1, '-d',
         #          t, yvalue2, '-^',
         #          )
         #
         # plt.legend(["N=1000","N=3000","N=5000", ])
-        # # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        # plt.savefig("img.svg",format='svg',dpi=600)  # svg¸ñÊ½
+        # # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        # plt.savefig("img.svg",format='svg',dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         # ax.plot(t, yvalue0, color='k', linestyle='-', linewidth=1, marker='s', markersize=7,
@@ -750,19 +750,19 @@ class InfoSpreading(object):
 
         ax.legend(labels=[r"$N=1000$",r"$N=3000$",r"$N=5000$"], ncol=1, fontsize=20)
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw3(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -774,17 +774,17 @@ class InfoSpreading(object):
             yvalue1.append(self.imageData[i][1])
             yvalue2.append(self.imageData[i][2])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-s',
         #          t, yvalue1, '-d',
         #          t, yvalue2, '-^',
         #          )
         #
-        # plt.legend(["¦Â=0.05", "¦Â=0.1", "¦Â=0.2", ])
-        # # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        # plt.savefig("img.svg",format='svg',dpi=600)  # svg¸ñÊ½
+        # plt.legend(["Î²=0.05", "Î²=0.1", "Î²=0.2", ])
+        # # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        # plt.savefig("img.svg",format='svg',dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         ax.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=8,
@@ -794,21 +794,21 @@ class InfoSpreading(object):
         ax.plot(t, yvalue2, color='#0ca022', linestyle='-', linewidth=1, marker='p', markersize=8,
                 )
 
-        ax.legend(labels=[r"$¦Â=0.05$", r"$¦Â=0.1$", r"$¦Â=0.2$"], ncol=1, fontsize=20)
+        ax.legend(labels=[r"$Î²=0.05$", r"$Î²=0.1$", r"$Î²=0.2$"], ncol=1, fontsize=20)
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw4(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -820,17 +820,17 @@ class InfoSpreading(object):
             yvalue1.append(self.imageData[i][1])
             yvalue2.append(self.imageData[i][2])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-s',
         #          t, yvalue1, '-d',
         #          t, yvalue2, '-^',
         #          )
         #
-        # plt.legend(["¦Ã=0.05", "¦Ã=0.10", "¦Ã=0.20", ])
-        # # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        # plt.savefig("img.svg",format='svg',dpi=600)  # svg¸ñÊ½
+        # plt.legend(["Î³=0.05", "Î³=0.10", "Î³=0.20", ])
+        # # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        # plt.savefig("img.svg",format='svg',dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         ax.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=8,
@@ -840,21 +840,21 @@ class InfoSpreading(object):
         ax.plot(t, yvalue2, color='#0ca022', linestyle='-', linewidth=1, marker='p', markersize=8,
                 )
 
-        ax.legend(labels=[r"$¦Ã=0.05$", r"$¦Ã=0.10$", r"$¦Ã=0.20$"], ncol=1, fontsize=20)
+        ax.legend(labels=[r"$Î³=0.05$", r"$Î³=0.10$", r"$Î³=0.20$"], ncol=1, fontsize=20)
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw5(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -872,9 +872,9 @@ class InfoSpreading(object):
             # yvalue4.append(self.imageData[i][4])
             # yvalue5.append(self.imageData[i][5])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-s',
         #          t, yvalue1, '-d',
         #          t, yvalue2, '-^',
@@ -884,8 +884,8 @@ class InfoSpreading(object):
         #          )
         #
         # plt.legend(["p=0", "p=0.2", "p=0.4", "p=0.6","p=0.8", "p=1" ])
-        # # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        # plt.savefig("img.svg",format='svg',dpi=600)  # svg¸ñÊ½
+        # # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        # plt.savefig("img.svg",format='svg',dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         ax.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=8,
@@ -915,13 +915,13 @@ class InfoSpreading(object):
         # ax.legend(labels=["p=0", "p=0.2", "p=0.4", "p=0.6","p=0.8", "p=1"], ncol=3)
         ax.legend(loc=(0.75,0.48),labels=[r"$n=2$", r"$n=3$", r"$n=4$"], ncol=1, fontsize=18)
 
-        # ax:¸¸×ø±êÏµ£»width,height:×Ó×ø±êÏµµÄ¿í¶ÈºÍ¸ß¶È(°Ù·Ö±ÈÐÎÊ½»òÕß¸¡µãÊý¸öÊý)£»loc:×Ó×ø±êÏµµÄÎ»ÖÃ£»
-        # bbox_to_anchor:±ß½ç¿ò£¬ËÄÔªÊý×é(x0,y0,width,height);bbox_transform:´Ó¸¸×ø±êÏµµ½×Ó×ø±êÏµµÄ¼¸ºÎÓ³Éä;
-        # axins:×Ó×ø±êÏµ
+        # ax:çˆ¶åæ ‡ç³»ï¼›width,height:å­åæ ‡ç³»çš„å®½åº¦å’Œé«˜åº¦(ç™¾åˆ†æ¯”å½¢å¼æˆ–è€…æµ®ç‚¹æ•°ä¸ªæ•°)ï¼›loc:å­åæ ‡ç³»çš„ä½ç½®ï¼›
+        # bbox_to_anchor:è¾¹ç•Œæ¡†ï¼Œå››å…ƒæ•°ç»„(x0,y0,width,height);bbox_transform:ä»Žçˆ¶åæ ‡ç³»åˆ°å­åæ ‡ç³»çš„å‡ ä½•æ˜ å°„;
+        # axins:å­åæ ‡ç³»
         # axins = inset_axes(ax,width="40%", height="30%", loc='lower left',
         #                    bbox_to_anchor=(0.1, 0.1, 1, 1),bbox_transform=ax.transAxes)
-        axins = ax.inset_axes((0.6, 0.05, 0.4, 0.4))  # ×ÓÍ¼Î»ÖÃ
-        # axins = ax.inset_axes((0.3, 0.05, 0.4, 0.4))  # ×ÓÍ¼Î»ÖÃ
+        axins = ax.inset_axes((0.6, 0.05, 0.4, 0.4))  # å­å›¾ä½ç½®
+        # axins = ax.inset_axes((0.3, 0.05, 0.4, 0.4))  # å­å›¾ä½ç½®
         axins.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=5,
                    )
         axins.plot(t, yvalue1, color='#ff7f0e', linestyle='-', linewidth=1, marker='d', markersize=5,
@@ -934,29 +934,29 @@ class InfoSpreading(object):
         #            )
         # axins.plot(t, yvalue5, color='#8c564b', linestyle='-', linewidth=1, marker='*', markersize=5,
         #            )
-        # µ÷Õû×Ó×ø±êÏµµÄÏÔÊ¾·¶Î§
+        # è°ƒæ•´å­åæ ‡ç³»çš„æ˜¾ç¤ºèŒƒå›´
         axins.set_xlim(1, 5)
         axins.set_ylim(0.3, 0.5)
         #plt.xticks(np.arange(0, 21, step=5))
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        # ½¨Á¢¸¸×ø±êÏµÓë×Ó×ø±êÏµµÄÁ¬½ÓÏß
-        # loc1 loc2: ×ø±êÏµµÄËÄ¸ö½Ç
-        # 1 (ÓÒÉÏ) 2 (×óÉÏ) 3(×óÏÂ) 4(ÓÒÏÂ)
+        # å»ºç«‹çˆ¶åæ ‡ç³»ä¸Žå­åæ ‡ç³»çš„è¿žæŽ¥çº¿
+        # loc1 loc2: åæ ‡ç³»çš„å››ä¸ªè§’
+        # 1 (å³ä¸Š) 2 (å·¦ä¸Š) 3(å·¦ä¸‹) 4(å³ä¸‹)
         mark_inset(ax, axins, loc1=3, loc2=1, fc="none", ec='k', lw=1)
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw6(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -968,17 +968,17 @@ class InfoSpreading(object):
             yvalue1.append(self.imageData[i][1])
             yvalue2.append(self.imageData[i][2])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-s',
         #          t, yvalue1, '-d',
         #          t, yvalue2, '-^',
         #          )
         #
         # plt.legend([ "maxDi","avgDi", "minDi"])
-        # # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        # plt.savefig("img.svg",format='svg',dpi=600)  # svg¸ñÊ½
+        # # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        # plt.savefig("img.svg",format='svg',dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         # ax.plot(t, yvalue0, color='k', linestyle='-', linewidth=1, marker='s', markersize=7,
@@ -1002,19 +1002,19 @@ class InfoSpreading(object):
 
         ax.legend(labels=["minHD","avgHD","maxHD"], ncol=1, fontsize=20)
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw7(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -1024,15 +1024,15 @@ class InfoSpreading(object):
             yvalue0.append(self.imageData[i][0])
             yvalue1.append(self.imageData[i][1])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-d',
         #          t, yvalue1, '-s',
         #          )
         #
         # plt.legend(["Clustering Hypernetwork", "BA Hypernetwork"])
-        # plt.savefig("img.svg",format='svg',dpi=600)  # svg¸ñÊ½
+        # plt.savefig("img.svg",format='svg',dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         ax.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=8,
@@ -1045,19 +1045,19 @@ class InfoSpreading(object):
         # ax.legend(labels=["Local Stochastically Variable Scale-free Hypernetwork", "BA Hypernetwork"], ncol=1, fontsize=18, loc='lower right', bbox_to_anchor=(1, 0))
         ax.legend(labels=["Local Stochastically Variable Scale-free Hypernetwork", "BA Hypernetwork"], ncol=1, fontsize=16, loc='lower right')
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw8(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -1070,15 +1070,15 @@ class InfoSpreading(object):
             if i==self.timeStep-1:
                 print("beta",self.beta,":",self.imageData[i][0],self.imageData[i][1],self.imageData[i][2])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-s',
         #          t, yvalue1, '-d',
         #          t, yvalue2, '-^',
         #          )
         # plt.legend(["m1=1", "m1=3", "m1=5"])
-        # plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        # plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         ax.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=8,
@@ -1090,41 +1090,41 @@ class InfoSpreading(object):
 
         # ax.legend(labels=["m1=1", "m1=3", "m1=5"], ncol=3)
 
-        # ax:¸¸×ø±êÏµ£»width,height:×Ó×ø±êÏµµÄ¿í¶ÈºÍ¸ß¶È(°Ù·Ö±ÈÐÎÊ½»òÕß¸¡µãÊý¸öÊý)£»loc:×Ó×ø±êÏµµÄÎ»ÖÃ£»
-        # bbox_to_anchor:±ß½ç¿ò£¬ËÄÔªÊý×é(x0,y0,width,height);bbox_transform:´Ó¸¸×ø±êÏµµ½×Ó×ø±êÏµµÄ¼¸ºÎÓ³Éä;
-        # axins:×Ó×ø±êÏµ
+        # ax:çˆ¶åæ ‡ç³»ï¼›width,height:å­åæ ‡ç³»çš„å®½åº¦å’Œé«˜åº¦(ç™¾åˆ†æ¯”å½¢å¼æˆ–è€…æµ®ç‚¹æ•°ä¸ªæ•°)ï¼›loc:å­åæ ‡ç³»çš„ä½ç½®ï¼›
+        # bbox_to_anchor:è¾¹ç•Œæ¡†ï¼Œå››å…ƒæ•°ç»„(x0,y0,width,height);bbox_transform:ä»Žçˆ¶åæ ‡ç³»åˆ°å­åæ ‡ç³»çš„å‡ ä½•æ˜ å°„;
+        # axins:å­åæ ‡ç³»
         # axins = inset_axes(ax,width="40%", height="30%", loc='lower left',
         #                    bbox_to_anchor=(0.1, 0.1, 1, 1),bbox_transform=ax.transAxes)
-        # axins = ax.inset_axes((0.4, 0.1, 0.4, 0.4))  # ×ÓÍ¼Î»ÖÃ
+        # axins = ax.inset_axes((0.4, 0.1, 0.4, 0.4))  # å­å›¾ä½ç½®
         # axins.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=5)
         # axins.plot(t, yvalue1, color='#ff7f0e', linestyle='-', linewidth=1, marker='d', markersize=5)
         # axins.plot(t, yvalue2, color='#0ca022', linestyle='-', linewidth=1, marker='p', markersize=5)
 
-        # µ÷Õû×Ó×ø±êÏµµÄÏÔÊ¾·¶Î§
+        # è°ƒæ•´å­åæ ‡ç³»çš„æ˜¾ç¤ºèŒƒå›´
         # axins.set_xlim(0, 5)
         # axins.set_ylim(0.35, 0.5)
         # plt.xticks(np.arange(0, 20, step=5))
 
         ax.legend(loc=(0.75, 0.55), labels=[r"$m_1=1$", r"$m_1=3$", r"$m_1=5$"], ncol=1, fontsize=20)
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        # ½¨Á¢¸¸×ø±êÏµÓë×Ó×ø±êÏµµÄÁ¬½ÓÏß
-        # loc1 loc2: ×ø±êÏµµÄËÄ¸ö½Ç
-        # 1 (ÓÒÉÏ) 2 (×óÉÏ) 3(×óÏÂ) 4(ÓÒÏÂ)
+        # å»ºç«‹çˆ¶åæ ‡ç³»ä¸Žå­åæ ‡ç³»çš„è¿žæŽ¥çº¿
+        # loc1 loc2: åæ ‡ç³»çš„å››ä¸ªè§’
+        # 1 (å³ä¸Š) 2 (å·¦ä¸Š) 3(å·¦ä¸‹) 4(å³ä¸‹)
         # mark_inset(ax, axins, loc1=3, loc2=1, fc="none", ec='k', lw=1)
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw9(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -1136,17 +1136,17 @@ class InfoSpreading(object):
             yvalue1.append(self.imageData[i][1])
             yvalue2.append(self.imageData[i][2])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-s',
         #          t, yvalue1, '-d',
         #          t, yvalue2, '-^',
         #          )
         #
         # plt.legend(["m2=1", "m2=3", "m2=5"])
-        # # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        # plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        # # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        # plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         ax.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=8,
@@ -1158,19 +1158,19 @@ class InfoSpreading(object):
 
         ax.legend(labels=[r"$m_2=1$", r"$m_2=3$", r"$m_2=5$"], ncol=1, fontsize=20)
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw10(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -1182,17 +1182,17 @@ class InfoSpreading(object):
             yvalue1.append(self.imageData[i][1])
             yvalue2.append(self.imageData[i][2])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-s',
         #          t, yvalue1, '-d',
         #          t, yvalue2, '-^',
         #          )
         #
         # plt.legend(["m=1", "m=3", "m=5"])
-        # # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        # plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        # # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        # plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         ax.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=8,
@@ -1204,19 +1204,19 @@ class InfoSpreading(object):
 
         ax.legend(labels=[r"$m=1$", r"$m=3$", r"$m=5$"], ncol=1, fontsize=20)
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw11(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -1228,9 +1228,9 @@ class InfoSpreading(object):
             yvalue1.append(self.imageData[i][1])
             yvalue2.append(self.imageData[i][2])
 
-        # plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        # plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         # plt.xlabel("t")
-        # plt.ylabel("¦Ñ")
+        # plt.ylabel("Ï")
         # plt.plot(t, yvalue0, '-s',
         #          t, yvalue1, '-d',
         #          t, yvalue2, '-^',
@@ -1238,7 +1238,7 @@ class InfoSpreading(object):
         #
         # # plt.legend(["m1=1,m2=1", "m1=3,m2=3", "m1=5,m2=5"])
         # plt.legend(["m1=1,m2=5", "m1=3,m2=3", "m1=5,m2=1"])
-        # plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        # plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         # plt.show()
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         ax.plot(t, yvalue0, color='#1f77b4', linestyle='-', linewidth=1, marker='s', markersize=8,
@@ -1251,21 +1251,21 @@ class InfoSpreading(object):
         ax.legend(labels=[r"$m_1=1,m_2=5$", r"$m_1=3,m_2=3$", r"$m_1=5,m_2=1$"], ncol=1, fontsize=20)
         # ax.legend(labels=[r"$m_1=1,m_2=1$", r"$m_1=3,m_2=3$", r"$m_1=5,m_2=5$"], ncol=1, fontsize=20)
         plt.xlabel("t", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ÐÞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊý
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
         # plt.xticks(np.arange(0, 20, step=5))
 
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw12(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -1279,9 +1279,9 @@ class InfoSpreading(object):
             yvalue2.append(self.imageData[i][2])
             yvalue3.append(self.imageData[i][3])
 
-        plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         plt.xlabel("t")
-        plt.ylabel("¦Ñ")
+        plt.ylabel("Ï")
         plt.plot(t, yvalue0, '-s',
                  t, yvalue1, '-d',
                  t, yvalue2, '-^',
@@ -1289,11 +1289,11 @@ class InfoSpreading(object):
                  )
 
         plt.legend(["m2=1,p=0.2", "m2=3,p=0.2", "m2=1,p=0.8", "m2=3,p=0.8"])
-        # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # »æÍ¼
+    # ç»˜å›¾
     def imgDraw13(self):
         t = [i for i in range(self.timeStep)]
         yvalue0 = [0]
@@ -1307,9 +1307,9 @@ class InfoSpreading(object):
             yvalue2.append(self.imageData[i][2])
             yvalue3.append(self.imageData[i][3])
 
-        plt.figure("²»Í¬Ä£ÐÍÖªÊ¶À©É¢Í¼", figsize=(10, 8))
+        plt.figure("ä¸åŒæ¨¡åž‹çŸ¥è¯†æ‰©æ•£å›¾", figsize=(10, 8))
         plt.xlabel("t")
-        plt.ylabel("¦Ñ")
+        plt.ylabel("Ï")
         plt.plot(t, yvalue0, '-s',
                  t, yvalue1, '-d',
                  t, yvalue2, '-^',
@@ -1317,13 +1317,13 @@ class InfoSpreading(object):
                  )
 
         plt.legend(["m1=1,p=0.2", "m1=3,p=0.2", "m1=1,p=0.8", "m1=3,p=0.8"])
-        # plt.rcParams['savefig.dpi'] = 100  # Í¼Æ¬ÏñËØ
-        plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        # plt.rcParams['savefig.dpi'] = 100  # å›¾ç‰‡åƒç´ 
+        plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # Êý¾Ý´æ´¢
+    # æ•°æ®å­˜å‚¨
     def dataExport(self):
-        print("´æ´¢...")
+        print("å­˜å‚¨...")
         with open(self.dataSave + 'imgData.txt', 'w') as file0:
             print("yData:", file=file0)
             print(self.imageData, file=file0)
@@ -1334,11 +1334,11 @@ if __name__ == '__main__':
     warnings.filterwarnings("error")
     warnings.filterwarnings('ignore', category=DeprecationWarning)
     warnings.filterwarnings("ignore", category=FutureWarning)
-    #infospr.funRun1()  # ÎÈÌ¬
-    # infospr.funRun2()  # ²»Í¬½ÚµãÊýN
-    # infospr.funRun3()  # ²»Í¬´«²¥ÂÊ¦Â
-    # infospr.funRun4()  # ²»Í¬»Ö¸´ÂÊ¦Ã
-    infospr.funRun5()  # ²»Í¬ÁÚ¾Ó½×Êýn
+    #infospr.funRun1()  # ç¨³æ€
+    # infospr.funRun2()  # ä¸åŒèŠ‚ç‚¹æ•°N
+    # infospr.funRun3()  # ä¸åŒä¼ æ’­çŽ‡Î²
+    # infospr.funRun4()  # ä¸åŒæ¢å¤çŽ‡Î³
+    infospr.funRun5()  # ä¸åŒé‚»å±…é˜¶æ•°n
 
     # infospr.importModel_raw(1000, 3, 3, 3)
     # infospr.spr(0.1, 0.1, 0, "avgHi")
@@ -1348,14 +1348,14 @@ if __name__ == '__main__':
     # infospr.spr(0.1, 0.1, 2, "avgHi")
     # infospr.importModel(1000, 3, 3, 3, 4)
     # infospr.spr(0.1, 0.1, 3, "avgHi")
-    # self.dataExport()  # Êý¾Ý´æ´¢
-    # infospr.imgDraw5()  # »æÍ¼
+    # self.dataExport()  # æ•°æ®å­˜å‚¨
+    # infospr.imgDraw5()  # ç»˜å›¾
 
-    # infospr.funRun6()  # ²»Í¬³õÊ¼´«²¥½Úµã
-    # infospr.funRun7()  # ÓëBA³¬ÍøÂç¶Ô±È
-    # infospr.funRun8()  # ²»Í¬m1
-    # infospr.funRun9()  # ²»Í¬m2
-    # infospr.funRun10()  # ²»Í¬m
-    # infospr.funRun11()  # m1+m2µÄÓ°Ïì
-    # infospr.funRun12()  # ²»Í¬p,m2±ä»¯µÄÓ°Ïì
-    # infospr.funRun13()  # ²»Í¬p,m1±ä»¯µÄÓ°Ïì
+    # infospr.funRun6()  # ä¸åŒåˆå§‹ä¼ æ’­èŠ‚ç‚¹
+    # infospr.funRun7()  # ä¸ŽBAè¶…ç½‘ç»œå¯¹æ¯”
+    # infospr.funRun8()  # ä¸åŒm1
+    # infospr.funRun9()  # ä¸åŒm2
+    # infospr.funRun10()  # ä¸åŒm
+    # infospr.funRun11()  # m1+m2çš„å½±å“
+    # infospr.funRun12()  # ä¸åŒp,m2å˜åŒ–çš„å½±å“
+    # infospr.funRun13()  # ä¸åŒp,m1å˜åŒ–çš„å½±å“
