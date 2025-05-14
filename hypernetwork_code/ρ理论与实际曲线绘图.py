@@ -17,21 +17,21 @@ class InfoSpreading(object):
         for beta in range(1,21):
             self.beta = beta/100
 
-            # Ê¹ÓÃfsolveº¯ÊıÇó½â·½³Ì
+            # ä½¿ç”¨fsolveå‡½æ•°æ±‚è§£æ–¹ç¨‹
             xita = fsolve(self.equation, 0.5, xtol=1e-6)[0]
 
             rho = (self.m * (self.m1 + self.m2) * (self.m1 + self.m2 - 1) * self.beta * xita * (1 - xita)) / (self.gamma * self.m1)
 
-            # print("½üËÆ½â¦È:", xita)
+            # print("è¿‘ä¼¼è§£Î¸:", xita)
             self.yvalue.append(rho)
-            print("ÃÜ¶È¦Ñ:", rho)
+            print("å¯†åº¦Ï:", rho)
         print(self.yvalue)
 
-    # ¶¨Òå±»»ıº¯Êı
+    # å®šä¹‰è¢«ç§¯å‡½æ•°
     def integrand(self, k, x):
         return (1 / (k ** (self.m1 / self.m2))) * (1 / (self.gamma + self.beta * (self.m1 + self.m2 - 1) * k * x))
 
-    # ¶¨Òå·½³Ì
+    # å®šä¹‰æ–¹ç¨‹
     def equation(self, x):
         result, error = integrate.quad(self.integrand, self.m, float('inf'), args=(x,))
         return result - self.m2 / (self.m1 * (self.m ** (self.m1 / self.m2)) * self.beta * (self.m1 + self.m2 - 1))
@@ -41,7 +41,7 @@ class InfoSpreading(object):
         t1 = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18,
          0.19, 0.20]
 
-        # yvalue:0,1,2ÎªÀíÂÛÖµ,3,4,5Îª·ÂÕæ½á¹û
+        # yvalue:0,1,2ä¸ºç†è®ºå€¼,3,4,5ä¸ºä»¿çœŸç»“æœ
         yvalue0 = [0.0,0.6258459876151803, 0.7958521975813403, 0.8599538205098124, 0.8934649872436867, 0.914046875794284, 0.9279678809803443, 0.9380098287389949, 0.9455952894680392, 0.9515271799345282, 0.9562929497738378, 0.9602056314129417, 0.9634754348086161, 0.966248756383784, 0.968630683243784, 0.970698602247177, 0.9725107619966585, 0.9741118441969131, 0.9755366959587479, 0.9768128943065562, 0.9779625480273901]
         yvalue1 = [0.0,0.2742250074017873, 0.5258459876151803, 0.6355490125535774, 0.6958521975813403, 0.7338498854313522, 0.7599538205098124, 0.7789823967167537, 0.7934649872436867, 0.8048551095968465, 0.814046875794284, 0.8216202721584958, 0.8279678809803443, 0.8333648734284452, 0.8380098287389949, 0.8420496382990995, 0.8455952894680392, 0.8487322003133947, 0.8515271799345282, 0.854033233112301, 0.8562929497738378]
         yvalue2 = [0.0,0.1250441955316834, 0.3365596390617211, 0.4758459876151802, 0.5567841585776313, 0.6192220895270408, 0.6458521975813395, 0.6728523790128921, 0.6935659410352205, 0.709953820509814, 0.7232401310440314, 0.7342277826556365, 0.7434649872436834, 0.7513386903258155, 0.7581297386273652, 0.7640468757942901, 0.7692484661320849, 0.773856816916785, 0.7779678809803465, 0.781657988196931, 0.7849886151441646]
@@ -53,8 +53,8 @@ class InfoSpreading(object):
         xlable = [0, 0.1, 0.2, 0.3, 0.4]
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         plt.xticks(xlable)
-        # plt.xlabel("¦Â", fontsize=15)
-        # plt.ylabel("¦Ñ", fontsize=15)
+        # plt.xlabel("Î²", fontsize=15)
+        # plt.ylabel("Ï", fontsize=15)
 
         plt.scatter(t1, yvalue3, marker="o", s=40, color='#1f77b4')
         plt.scatter(t1, yvalue4, marker="s", s=40, color='#ff7f0e')
@@ -65,17 +65,17 @@ class InfoSpreading(object):
 
         ax.legend(labels=[r"$\gamma=0.1$", r"$\gamma=0.2$", r"$\gamma=0.3$",
                           r"theoretical", r"theoretical", r"theoretical"], ncol=1, fontsize=20)
-        plt.xlabel("¦Â", fontsize=25)
-        plt.ylabel("¦Ñ", fontsize=25)
+        plt.xlabel("Î²", fontsize=25)
+        plt.ylabel("Ï", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ĞŞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊı
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
 
-        #plt.savefig("img.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        #plt.savefig("img.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
 if __name__ == '__main__':
