@@ -5,20 +5,20 @@ import hypernetx as hnx
 import matplotlib.pyplot as plt
 
 import warnings
-# ½«¾¯¸æ¼¶±ğÉèÖÃÎª ERROR£¬ÒâÎ¶×ÅÖ»»áÏÔÊ¾ ERROR ¼¶±ğµÄ¾¯¸æ
+# å°†è­¦å‘Šçº§åˆ«è®¾ç½®ä¸º ERRORï¼Œæ„å‘³ç€åªä¼šæ˜¾ç¤º ERROR çº§åˆ«çš„è­¦å‘Š
 
 class hypergraph(object):
     def __init__(self):
-        self.m0 = int(input("ÇëÊäÈë³õÊ¼½Úµã¸öÊım0:"))
-        self.m1 = int(input("ÇëÊäÈëÃ¿´ÎÔö¼ÓµÄĞÂ½ÚµãÊım1:")) # Ã¿´ÎÔö¼ÓĞÂ½Úµã¸öÊı
-        self.m2 = int(input("ÇëÊäÈëÑ¡È¡µÄ¾É½ÚµãÊım2:")) # Ã¿Ìõ³¬±ßÑ¡Ôñ¾É½Úµã¸öÊı
-        self.timestep = int(input("ÇëÊäÈëÊ±¼ä²½t:"))
-        self.m = int(input("ÇëÊäÈëÃ¿´ÎÔö¼ÓµÄ³¬±ßÊım:"))  # Ã¿´ÎÉú³ÉĞÂ³¬±ßµÄÌõÊı(²»ÄÜ´óÓÚ³õÊ¼½Úµã¸öÊı4¸ö£¬È¡2,3,4)
-        self.n = int(input("ÇëÊäÈë¾ÖÓòÊÀ½çµÄÁÚ¾Ó½×Êın:"))  # ÁÚ¾Ó½ÚµãµÄ½×Êı
-        self.nodesNum = self.m0 + self.m1 * self.timestep # Éú³É×Ü½Úµã¸öÊı
-        self.lastNode = 0  # ¼ÇÂ¼µ±Ç°×îºóÒ»¸ö½ÚµãµÄ±àºÅ
-        self.lastEdge = 1  # ¼ÇÂ¼µ±Ç°×îºóÒ»Ìõ³¬±ßµÄ±àºÅ
-        self.incidenceMatrix = np.zeros((self.nodesNum, 1), int)  # ¹ØÁª¾ØÕó(¶àÉÙĞĞ¾ÍÓĞ¶àÉÙ¸ö½Úµã£¬¶àÉÙÁĞ¾ÍÓĞ¶àÉÙÌõ³¬±ß)
+        self.m0 = int(input("è¯·è¾“å…¥åˆå§‹èŠ‚ç‚¹ä¸ªæ•°m0:"))
+        self.m1 = int(input("è¯·è¾“å…¥æ¯æ¬¡å¢åŠ çš„æ–°èŠ‚ç‚¹æ•°m1:")) # æ¯æ¬¡å¢åŠ æ–°èŠ‚ç‚¹ä¸ªæ•°
+        self.m2 = int(input("è¯·è¾“å…¥é€‰å–çš„æ—§èŠ‚ç‚¹æ•°m2:")) # æ¯æ¡è¶…è¾¹é€‰æ‹©æ—§èŠ‚ç‚¹ä¸ªæ•°
+        self.timestep = int(input("è¯·è¾“å…¥æ—¶é—´æ­¥t:"))
+        self.m = int(input("è¯·è¾“å…¥æ¯æ¬¡å¢åŠ çš„è¶…è¾¹æ•°m:"))  # æ¯æ¬¡ç”Ÿæˆæ–°è¶…è¾¹çš„æ¡æ•°(ä¸èƒ½å¤§äºåˆå§‹èŠ‚ç‚¹ä¸ªæ•°4ä¸ªï¼Œå–2,3,4)
+        self.n = int(input("è¯·è¾“å…¥å±€åŸŸä¸–ç•Œçš„é‚»å±…é˜¶æ•°n:"))  # é‚»å±…èŠ‚ç‚¹çš„é˜¶æ•°
+        self.nodesNum = self.m0 + self.m1 * self.timestep # ç”Ÿæˆæ€»èŠ‚ç‚¹ä¸ªæ•°
+        self.lastNode = 0  # è®°å½•å½“å‰æœ€åä¸€ä¸ªèŠ‚ç‚¹çš„ç¼–å·
+        self.lastEdge = 1  # è®°å½•å½“å‰æœ€åä¸€æ¡è¶…è¾¹çš„ç¼–å·
+        self.incidenceMatrix = np.zeros((self.nodesNum, 1), int)  # å…³è”çŸ©é˜µ(å¤šå°‘è¡Œå°±æœ‰å¤šå°‘ä¸ªèŠ‚ç‚¹ï¼Œå¤šå°‘åˆ—å°±æœ‰å¤šå°‘æ¡è¶…è¾¹)
         self.scenes = {}
         self.xdata = []
         self.ydata = []
@@ -27,40 +27,40 @@ class hypergraph(object):
         self.modelCreate()
         self.exportData()
     def modelCreate(self):
-        print("ÕıÔÚÉú³ÉÄ£ĞÍ")
-        # ¹¹½¨³õÊ¼ÍøÂç
-        eTuple = ()  # ³¬±ßÖĞµÄ½ÚµãÓÃÔª×é´æ´¢
+        print("æ­£åœ¨ç”Ÿæˆæ¨¡å‹")
+        # æ„å»ºåˆå§‹ç½‘ç»œ
+        eTuple = ()  # è¶…è¾¹ä¸­çš„èŠ‚ç‚¹ç”¨å…ƒç»„å­˜å‚¨
         for i in range(self.m0):
-            # ½«½Úµã¼ÓÈëµ½³¬±ßÖĞ
+            # å°†èŠ‚ç‚¹åŠ å…¥åˆ°è¶…è¾¹ä¸­
             eTuple += ('v' + str(i + 1),)
-            # ¸üĞÂ¹ØÁª¾ØÕó
+            # æ›´æ–°å…³è”çŸ©é˜µ
             self.incidenceMatrix[i][0] = 1
         self.lastNode = self.m0
         self.scenes['E1'] = eTuple
         self.H = hnx.Hypergraph(self.scenes)
-        # ÍøÂçÔö³¤
+        # ç½‘ç»œå¢é•¿
         newCol = [[0] for _ in range(len(self.incidenceMatrix))]
         while self.lastNode < self.nodesNum:
-            print("\r½ø¶È£º" + str(self.lastNode + 1) + "/" + str(self.nodesNum), end='')
-            current_m = 0  # ÓÃÀ´¼ÇÂ¼µ±Ç°ÒÑ¾­Éú³É¶àÉÙÌõĞÂµÄ³¬±ß
-            # Ñ¡ÔñĞÂ³¬±ßµÄ¾É½Úµã
-            node1 = random.randint(1, self.lastNode) #Ëæ»úÑ¡ÔñµÄ½Úµã±àºÅ
+            print("\rè¿›åº¦ï¼š" + str(self.lastNode + 1) + "/" + str(self.nodesNum), end='')
+            current_m = 0  # ç”¨æ¥è®°å½•å½“å‰å·²ç»ç”Ÿæˆå¤šå°‘æ¡æ–°çš„è¶…è¾¹
+            # é€‰æ‹©æ–°è¶…è¾¹çš„æ—§èŠ‚ç‚¹
+            node1 = random.randint(1, self.lastNode) #éšæœºé€‰æ‹©çš„èŠ‚ç‚¹ç¼–å·
             neighbor_list = []
             neighbor_list.append("v" + str(node1))
-            neighbor_list.extend(list(self.H.neighbors("v" + str(node1))))  # ËùÑ¡½ÚµãµÄÒ»½×ÁÚ¾Ó
-            neighbor_list = list(set(neighbor_list))  # ¶ÔÁÚ¾Ó½Úµã±àºÅµÄÈ¥ÖØ
-            neighbor_list.sort() # ¶ÔÁÚ¾Ó½Úµã±àºÅµÄÅÅĞò
-            neighbor_listn = neighbor_list.copy()  # ËùÑ¡½ÚµãµÄn½×ÁÚ¾Ó
+            neighbor_list.extend(list(self.H.neighbors("v" + str(node1))))  # æ‰€é€‰èŠ‚ç‚¹çš„ä¸€é˜¶é‚»å±…
+            neighbor_list = list(set(neighbor_list))  # å¯¹é‚»å±…èŠ‚ç‚¹ç¼–å·çš„å»é‡
+            neighbor_list.sort() # å¯¹é‚»å±…èŠ‚ç‚¹ç¼–å·çš„æ’åº
+            neighbor_listn = neighbor_list.copy()  # æ‰€é€‰èŠ‚ç‚¹çš„né˜¶é‚»å±…
             # print(neighbor_list)
             for i in range(1, self.n):
                 for j in neighbor_list:
                     neighbor_listn.extend(list(self.H.neighbors(j)))
-                neighbor_listn = list(set(neighbor_listn))  # ¶ÔÁÚ¾Ó½Úµã±àºÅµÄÈ¥ÖØ
+                neighbor_listn = list(set(neighbor_listn))  # å¯¹é‚»å±…èŠ‚ç‚¹ç¼–å·çš„å»é‡
                 neighbor_list = neighbor_listn.copy()
 
-            while current_m < self.m:  # Éú³ÉmÌõ³¬±ß
+            while current_m < self.m:  # ç”Ÿæˆmæ¡è¶…è¾¹
                 self.lastEdge += 1
-                # ½«ĞÂÔö½ÚµãÏÈ·ÅÈëÉú³ÉµÄÒ»¸öĞÂ³¬±ß£¬²¢¸üĞÂ¹ØÁª¾ØÕó
+                # å°†æ–°å¢èŠ‚ç‚¹å…ˆæ”¾å…¥ç”Ÿæˆçš„ä¸€ä¸ªæ–°è¶…è¾¹ï¼Œå¹¶æ›´æ–°å…³è”çŸ©é˜µ
                 self.incidenceMatrix = np.c_[self.incidenceMatrix, newCol]
                 eTuple = ()
                 for i in range(1, self.m1 + 1):
@@ -68,8 +68,8 @@ class hypergraph(object):
                     self.incidenceMatrix[self.lastNode + i - 1][self.lastEdge - 1] = 1
                 current_m += 1
                 selectNode_had = []
-                selectNode = self.local_selection(neighbor_listn)  # local_selection¾ÖÓòÓÅÏÈ¸ÅÂÊ·µ»Ø¾É½ÚµãÁĞ±í
-                while selectNode in selectNode_had:   # Éú³É²»Í¬µÄmÌõ³¬±ß
+                selectNode = self.local_selection(neighbor_listn)  # local_selectionå±€åŸŸä¼˜å…ˆæ¦‚ç‡è¿”å›æ—§èŠ‚ç‚¹åˆ—è¡¨
+                while selectNode in selectNode_had:   # ç”Ÿæˆä¸åŒçš„mæ¡è¶…è¾¹
                     selectNode = self.local_selection(neighbor_listn)
                 for i in range(self.m2):
                     eTuple += ('v' + str(selectNode[i]),)
@@ -89,45 +89,45 @@ class hypergraph(object):
         # for i in range(len(self.incidenceMatrix)):
         #     print(self.incidenceMatrix[i])
         print(self.incidenceMatrix)
-    # °´ÕÕ¸ÅÂÊÑ¡Ôñ½Úµã
+    # æŒ‰ç…§æ¦‚ç‡é€‰æ‹©èŠ‚ç‚¹
     def local_selection(self, neighbor_list):
-        # ÏÈ¼ÆËãÑ¡È¡µÄ¸ÅÂÊ
-        pNode = []  # ´æ´¢¸÷½ÚµãµÄ¶ÈÕ¼×Ü¶ÈÊıµÄ±ÈÀı
-        sumD = 0  # ³¬Í¼ÖĞ½ÚµãµÄ×Ü³¬¶ÈÊı
+        # å…ˆè®¡ç®—é€‰å–çš„æ¦‚ç‡
+        pNode = []  # å­˜å‚¨å„èŠ‚ç‚¹çš„åº¦å æ€»åº¦æ•°çš„æ¯”ä¾‹
+        sumD = 0  # è¶…å›¾ä¸­èŠ‚ç‚¹çš„æ€»è¶…åº¦æ•°
         for i in neighbor_list:
             sumD += np.sum(np.array(self.incidenceMatrix[int(i[1:])-1]))
         for i in neighbor_list:
-            pNode.append((int(i[1:]),round(np.sum(np.array(self.incidenceMatrix[int(i[1:])-1])) / sumD, 6)))  # ¸ÅÂÊ±£Áô4Î»Ğ¡Êı
+            pNode.append((int(i[1:]),round(np.sum(np.array(self.incidenceMatrix[int(i[1:])-1])) / sumD, 6)))  # æ¦‚ç‡ä¿ç•™4ä½å°æ•°
 
-        # ¶Ô¸ÅÂÊÊı×é´¦Àí£¬Ê¹Ö®·ÖÅäµ½¡¾0£¬1¡¿Çø¼ä
-        pNodeSection = []  # ´æ´¢¸÷¸ö½ÚµãµÄÇø¼ä£¬Çø¼äÊ¹ÓÃÔª×é´æ´¢
-        left = right = 0  # ×óÓÒÇø¼ä
+        # å¯¹æ¦‚ç‡æ•°ç»„å¤„ç†ï¼Œä½¿ä¹‹åˆ†é…åˆ°ã€0ï¼Œ1ã€‘åŒºé—´
+        pNodeSection = []  # å­˜å‚¨å„ä¸ªèŠ‚ç‚¹çš„åŒºé—´ï¼ŒåŒºé—´ä½¿ç”¨å…ƒç»„å­˜å‚¨
+        left = right = 0  # å·¦å³åŒºé—´
         for p in pNode:
             left = right
             right += p[1]
             pNodeSection.append((p[0],(left, right)))
 
-        # ²»ÄÜÖØ¸´Ñ¡µã£¬ÖØ¸´ÔòÖØĞÂÑ¡Ôñ
-        selectNode = []  # ´æ´¢Ñ¡È¡µÄ½Úµã±àºÅ
-        state = [True] * len(neighbor_list)  # ´æ´¢Ñ¡È¡×´Ì¬
-        existNode = self.m2  # Ñ¡ÔñµÄ¾É½ÚµãÊı
+        # ä¸èƒ½é‡å¤é€‰ç‚¹ï¼Œé‡å¤åˆ™é‡æ–°é€‰æ‹©
+        selectNode = []  # å­˜å‚¨é€‰å–çš„èŠ‚ç‚¹ç¼–å·
+        state = [True] * len(neighbor_list)  # å­˜å‚¨é€‰å–çŠ¶æ€
+        existNode = self.m2  # é€‰æ‹©çš„æ—§èŠ‚ç‚¹æ•°
         while existNode:
             for t in range(len(neighbor_list)):
                 if state[t] and pNodeSection[t][1][0] <= round(random.random(), 6) < pNodeSection[t][1][1]:
                     selectNode.append(pNodeSection[t][0])
                     existNode -= 1
-                    state[t] = False  # ±ê¼ÇÎªÒÑÑ¡Ôñ
+                    state[t] = False  # æ ‡è®°ä¸ºå·²é€‰æ‹©
                 if existNode == 0:
                     break
         return selectNode
 
     def degreeDistribute(self):
-        print('ÕıÔÚ¼ÆËã³¬¶È·Ö²¼')
+        print('æ­£åœ¨è®¡ç®—è¶…åº¦åˆ†å¸ƒ')
         N = self.nodesNum
         self.H = hnx.Hypergraph(self.scenes)
-        # ¼ÆËã³¬¶Èhk
+        # è®¡ç®—è¶…åº¦hk
         hk = hnx.degree_dist(self.H)
-        # Pk ÓÃÀ´¼ÆËã³¬¶È·Ö²¼
+        # Pk ç”¨æ¥è®¡ç®—è¶…åº¦åˆ†å¸ƒ
         Pk = np.zeros(max(hk), float)
         for i in range(N):
             Pk[hk[i] - 1] += 1 / N
@@ -145,7 +145,7 @@ class hypergraph(object):
         self.ydata.append(Pk[1:])
 
     def drawshow(self):
-        # plt.figure("³¬¶ÈÃİÂÉ·Ö²¼P(k)Óëk¶ÔÊı¹ØÏµÍ¼", figsize=(10, 8))
+        # plt.figure("è¶…åº¦å¹‚å¾‹åˆ†å¸ƒP(k)ä¸kå¯¹æ•°å…³ç³»å›¾", figsize=(10, 8))
         fig, ax = plt.subplots(figsize=(10, 8))
         # plt.scatter(self.xdata[0], self.ydata[0], marker='o', facecolors='none', edgecolors='blue')
         # plt.loglog(self.xdata[1], self.ydata[1], '-', lw=4, color='k')
@@ -160,25 +160,25 @@ class hypergraph(object):
         plt.ylabel("P(k)", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ĞŞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊı
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
         ax.legend(labels=[r"emulational", "theoretical"], ncol=1, fontsize=20)
         #ax.legend(labels=[r"$p=0.5$", "theoretical"], ncol=1, fontsize=20)
-        plt.savefig("img2.svg", format='svg', dpi=600)  # svg¸ñÊ½
+        plt.savefig("img2.svg", format='svg', dpi=600)  # svgæ ¼å¼
         plt.show()
 
     def exportData(self):
-        print("´æ´¢ÖĞ...")
+        print("å­˜å‚¨ä¸­...")
         file_path = self.dataSave +"n"+str(self.nodesNum)+"m1"+str(self.m1)+"m2"+str(self.m2)+"m"+str(self.m) + "_"+str(self.n)+'version.txt'
         with open(file_path, 'w') as file0:
             for i in range(self.nodesNum):
-                print("\r½ø¶È£º" + str(i + 1) + '/' + str(self.nodesNum), end='')
+                print("\rè¿›åº¦ï¼š" + str(i + 1) + '/' + str(self.nodesNum), end='')
                 row_data = ' '.join(str(self.incidenceMatrix[i][j]) for j in range(self.lastEdge))
                 print(row_data, file=file0)
-        print("\n´æ´¢Íê³É£º" + file_path)
+        print("\nå­˜å‚¨å®Œæˆï¼š" + file_path)
 
 if __name__ == '__main__':
     H = hypergraph()
