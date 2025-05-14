@@ -11,8 +11,8 @@ class HUHPM(object):
         self.scenes = {}
         self.xdata = []
         self.ydata = []
-        self.dataSave = "Save/degreeDistributeDataSave/"  # Êı¾İ±£´æÂ·¾¶
-        self.imageSave = "./imagesave.png"  # Í¼Æ¬±£´æÂ·¾¶
+        self.dataSave = "Save/degreeDistributeDataSave/"  # æ•°æ®ä¿å­˜è·¯å¾„
+        self.imageSave = "./imagesave.png"  # å›¾ç‰‡ä¿å­˜è·¯å¾„
         self.importpath = "ModelSave/"
 
     def initHyperGraph(self):
@@ -38,11 +38,11 @@ class HUHPM(object):
         self.imaShow1()
 
     def degreeDistribute(self,N):
-        print("ÕıÔÚ¼ÆËã³¬¶È·Ö²¼")
+        print("æ­£åœ¨è®¡ç®—è¶…åº¦åˆ†å¸ƒ")
         self.H = hnx.Hypergraph(self.scenes)
-        # ¼ÆËã³¬¶Èhk
+        # è®¡ç®—è¶…åº¦hk
         hk = hnx.degree_dist(self.H)
-        # Pk ÓÃÀ´¼ÆËã³¬¶È·Ö²¼
+        # Pk ç”¨æ¥è®¡ç®—è¶…åº¦åˆ†å¸ƒ
         Pk = np.zeros(max(hk),float)
         for i in range(N):
             Pk[hk[i]-1] += 1/N
@@ -61,7 +61,7 @@ class HUHPM(object):
         self.ydata.append(Pk[2:])
 
     def imaShow(self):
-        # plt.figure("³¬¶ÈÃİÂÉ·Ö²¼P(k)Óëk¶ÔÊı¹ØÏµÍ¼", figsize=(10, 8))
+        # plt.figure("è¶…åº¦å¹‚å¾‹åˆ†å¸ƒP(k)ä¸kå¯¹æ•°å…³ç³»å›¾", figsize=(10, 8))
 
         fig, ax = plt.subplots(figsize=(10, 8))
 
@@ -78,18 +78,18 @@ class HUHPM(object):
         plt.ylabel("P(k)", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ĞŞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊı
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
         ax.legend(labels=[r"$n=1$", "theoretical"], ncol=1, fontsize=20)
 
-        plt.savefig("img1.svg",format='svg',dpi=600)  # svg¸ñÊ½
+        plt.savefig("img1.svg",format='svg',dpi=600)  # svgæ ¼å¼
         plt.show()
 
     def imaShow1(self):
-        # plt.figure("³¬¶ÈÃİÂÉ·Ö²¼P(k)Óëk¶ÔÊı¹ØÏµÍ¼", figsize=(10, 8))
+        # plt.figure("è¶…åº¦å¹‚å¾‹åˆ†å¸ƒP(k)ä¸kå¯¹æ•°å…³ç³»å›¾", figsize=(10, 8))
         fig, ax = plt.subplots(figsize=(10, 8))
         # plt.xlabel("k")
         # plt.ylabel("P(k)")
@@ -118,33 +118,33 @@ class HUHPM(object):
         plt.ylabel("P(k)", fontsize=25)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.tick_params(width=1.5)  # ĞŞ¸Ä¿Ì¶ÈÏßÏß´ÖÏ¸width²ÎÊı
-        ax.spines['bottom'].set_linewidth(1.5)  ###ÉèÖÃµ×²¿×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['left'].set_linewidth(1.5)  ####ÉèÖÃ×ó±ß×ø±êÖáµÄ´ÖÏ¸
-        ax.spines['right'].set_linewidth(1.5)  ###ÉèÖÃÓÒ±ß×ø±êÖáµÄ´ÖÏ¸
+        plt.tick_params(width=1.5)  # ä¿®æ”¹åˆ»åº¦çº¿çº¿ç²—ç»†widthå‚æ•°
+        ax.spines['bottom'].set_linewidth(1.5)  ###è®¾ç½®åº•éƒ¨åæ ‡è½´çš„ç²—ç»†
+        ax.spines['left'].set_linewidth(1.5)  ####è®¾ç½®å·¦è¾¹åæ ‡è½´çš„ç²—ç»†
+        ax.spines['right'].set_linewidth(1.5)  ###è®¾ç½®å³è¾¹åæ ‡è½´çš„ç²—ç»†
         ax.spines['top'].set_linewidth(1.5)
         ax.legend(labels=[r"$n=2$",r"$n=3$",r"$n=4$","theoretical"], ncol=1, fontsize=20)
 
         # plt.legend(["p=0","p=0.2","p=0.4","p=0.6","p=0.8","p=1","theoretical"])
 
-        plt.savefig("img.svg",format='svg',dpi=600)  # svg¸ñÊ½
+        plt.savefig("img.svg",format='svg',dpi=600)  # svgæ ¼å¼
         plt.show()
 
-    # µ¼ÈëÊı¾İ
-    def importModel(self,N,m1,m2,m,n):  # ½ÚµãÊı(5000)
-        print("µ¼ÈëN={},m1={},m2={},m={},n={}µÄÄ£ĞÍ".format(N,m1,m2,m,n))
-        # BA³¬ÍøÂçÄ£ĞÍµ¼Èë
+    # å¯¼å…¥æ•°æ®
+    def importModel(self,N,m1,m2,m,n):  # èŠ‚ç‚¹æ•°(5000)
+        print("å¯¼å…¥N={},m1={},m2={},m={},n={}çš„æ¨¡å‹".format(N,m1,m2,m,n))
+        # BAè¶…ç½‘ç»œæ¨¡å‹å¯¼å…¥
         self.incidenceMatrix = np.genfromtxt(
             self.importpath+"n"+str(N)+"m1"+str(m1)+"m2"+str(m2)+"m"+str(m)+ "_" +str(n)+'version.txt', delimiter=' ')
         for i in range(len(self.incidenceMatrix[0])):
-            eTuple = ()  # ³¬±ßÖĞµÄ½ÚµãÓÃÔª×é´æ´¢
+            eTuple = ()  # è¶…è¾¹ä¸­çš„èŠ‚ç‚¹ç”¨å…ƒç»„å­˜å‚¨
             for j in range(len(self.incidenceMatrix)):
                 if self.incidenceMatrix[j][i] != 0:
                     eTuple += ('v' + str(j + 1),)
             self.scenes["E" + str(i + 1)] = eTuple
 
     def dataExport(self):
-        print("´æ´¢...")
+        print("å­˜å‚¨...")
         with open(self.dataSave + 'degDist.txt', 'w') as file0:
             print("xData:", file=file0)
             print(self.xdata, file=file0)
